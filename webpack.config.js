@@ -1,7 +1,10 @@
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 module.exports = {
-  entry: './client/client.js',
+  entry: './client/app.js',
   output: {
-    path: './public',
+    path: './public/bundled',
     filename: 'bundle.js'
   },
   module: {
@@ -10,10 +13,23 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
-      }
+      },
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader') },
+      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=10000' },
+      { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.json']
-  }
+    extensions: ['', '.js', '.json'],
+    modulesDirectories: ['node_modules']
+  },
+
+  plugins: [
+    new ExtractTextPlugin('style.css', { allChunks: true }),
+    new webpack.ProvidePlugin({
+        jQuery: 'jquery',
+        $: 'jquery',
+        jquery: 'jquery'
+    })
+  ]
 };
