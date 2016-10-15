@@ -1,6 +1,9 @@
 import { Link, browserHistory } from 'react-router'
+import { connect } from 'react-redux'
 
-export default class Join extends React.Component {
+import { updateGameData } from './../../actions'
+
+class Join extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -8,10 +11,27 @@ export default class Join extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   handleChange(event) {
-    this.setState({gameid: event.target.value});
+    this.setState({ gameid: event.target.value });
+  }
+
+  onClick() {
+    console.log(this.state);
+
+    this.context.socket.emit('game.join', this.state.gameid, (gamedata, error) => {
+      console.log(gamedata, error);
+      if (error) {
+        alert("an error happened :( " + JSON.stringify(error));
+        return;
+      }
+
+      this.props.updateGameData(gamedata);
+
+      browserHistory.push('/game/play/' + this.state.gameid);
+    });
   }
 
   render() {
@@ -30,7 +50,7 @@ export default class Join extends React.Component {
 
           <div className="form-group">
             <div className="col-md-4 col-md-offset-4 ">
-              <Link to={"/game/play/" + this.state.gameid} id="joingame" name="joingame" className="btn btn-success">Join Game</Link>
+              <button id="joingame" name="joingame" className="btn btn-success" type="button" onClick={this.onClick}>Join Game</button>
             </div>
           </div>
 
@@ -40,3 +60,26 @@ export default class Join extends React.Component {
     </div>
   }
 }
+
+Join.contextTypes = {
+  socket: React.PropTypes.object
+};
+
+const mapStateToProps = (state) => {
+  return {
+    player: state.player
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateGameData: (data) => {
+      dispatch(updateGameData(data))
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Join);

@@ -1,4 +1,9 @@
 import { browserHistory } from 'react-router'
+import { connect } from 'react-redux'
+
+import { getFormData } from './../helpers'
+
+import { updatePlayerData } from './../actions'
 
 const avatars = [
   '/static/avatars/man.png',
@@ -27,7 +32,7 @@ const avatars = [
   '/static/avatars/woman-12.png',
 ].sort();
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
   constructor(props) {
     super(props);
     this._joinGamePressed = this._joinGamePressed.bind(this);
@@ -35,6 +40,7 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
   }
 
   componentWillUnmount() {
@@ -60,21 +66,24 @@ export default class Profile extends React.Component {
 
   _validateAndContinue(buttonPressed) {
 
-    const playerData = $('#profileform').serializeArray().reduce((obj, item) => {
-      obj[item.name] = item.value;
-      return obj;
-    }, {});
+    const playerData = getFormData('profileform');
 
     if (!this._validateForm(playerData)) return;
 
     // TODO show loading icon
 
     //this.state.socket.emit('player.update', playerData, data => {
-      // callback, check if error, else proceed
+    // callback, check if error, else proceed
     //});
 
     // do this in the callback on success
-    browserHistory.push('/game/join');
+    this.props.updatePlayerData(playerData);
+
+    if (buttonPressed === "createGame") {
+      browserHistory.push('/game/new');
+    } else {
+      browserHistory.push('/game/join');
+    }
 
   }
   render() {
@@ -84,18 +93,18 @@ export default class Profile extends React.Component {
       <form className="form-horizontal" id="profileform">
         <fieldset>
           <div className="form-group">
-            <label className="col-md-2 control-label" htmlFor="name">Name</label>
+            <label className="col-md-3 control-label" htmlFor="name">Name</label>
             <div className="col-md-8">
-              <input id="name" name="name" type="text" placeholder="Hans" className="form-control input-md" required="" />
+              <input id="name" name="name" type="text" placeholder="Hans" className="form-control input-md" defaultValue={this.props.player.name} required="" />
 
             </div>
           </div>
 
           <div className="form-group">
-            <label className="col-md-2 control-label" htmlFor="avatar">Avatar</label>
+            <label className="col-md-3 control-label" htmlFor="avatar">Avatar</label>
             <div className="col-md-8">
               {avatars.map((avatar, idx) => <label key={avatar} className="radio-inline" style={{ marginLeft: 10 }}>
-                <input type="radio" name="avatar" defaultChecked={idx == 0} value={avatar} />
+                <input type="radio" name="avatar" defaultChecked={idx == 0 || this.props.player.avatar == avatar} value={avatar} />
                 <img src={avatar} width="50px" />
               </label>)}
             </div>
@@ -114,3 +123,22 @@ export default class Profile extends React.Component {
     </div>
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    player: state.player
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updatePlayerData: (data) => {
+      dispatch(updatePlayerData(data))
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Profile);

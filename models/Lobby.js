@@ -1,4 +1,4 @@
-import Game from './../models/Game';
+import Game from './Game';
 
 export default class Lobby {
   constructor() {
@@ -6,14 +6,14 @@ export default class Lobby {
     this.players = [];
   }
 
-  create_new_game(creator_id, { max_players=4, password=""} ) {
+  create_new_game(creator_id, data) {
     const creator = this.players.find(p => p.id == creator_id);
     if( creator === undefined) {
       console.log("ERROR: User not found");
       throw "Player with id " +creator_id +" was not found on server";
     }
-    const game_id = Math.floor(Math.random()*100000);
-    const game = new Game(creator, game_id, max_players, password);
+    const game_id = Math.floor(Math.random() * (10**5 - 10**4) + 10**4);
+    const game = new Game(creator, game_id, data);
     this.games.push(game);
     console.log("Create new Game: ", game);
     creator.game_id = game_id;
