@@ -30,11 +30,19 @@ const avatars = [
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);
-    this._joinGame = this._joinGame.bind(this);
-    this._createGame = this._createGame.bind(this);
+    this._joinGamePressed = this._joinGamePressed.bind(this);
+    this._createGamePressed = this._createGamePressed.bind(this);
   }
-  _validate() {
-    if ($("#name").val() == "") {
+
+  componentDidMount() {
+  }
+
+  componentWillUnmount() {
+
+  }
+
+  _validateForm(playerData) {
+    if (playerData.name == "") {
       alert("Please provide a name!");
       return false;
     }
@@ -42,21 +50,38 @@ export default class Profile extends React.Component {
     return true;
   }
 
-  _joinGame() {
-    if (!this._validate()) return;
-
-    browserHistory.push('/game/join');
+  _joinGamePressed() {
+    this._validateAndContinue("joinGame");
   }
 
-  _createGame() {
-    if (!this._validate()) return;
+  _createGamePressed() {
+    this._validateAndContinue("createGame");
+  }
+
+  _validateAndContinue(buttonPressed) {
+
+    const playerData = $('#profileform').serializeArray().reduce((obj, item) => {
+      obj[item.name] = item.value;
+      return obj;
+    }, {});
+
+    if (!this._validateForm(playerData)) return;
+
+    // TODO show loading icon
+
+    //this.state.socket.emit('player.update', playerData, data => {
+      // callback, check if error, else proceed
+    //});
+
+    // do this in the callback on success
+    browserHistory.push('/game/join');
 
   }
   render() {
     return <div className="col-md-6 col-md-offset-3">
       <h1>Create your profile</h1>
       <br />
-      <form className="form-horizontal">
+      <form className="form-horizontal" id="profileform">
         <fieldset>
           <div className="form-group">
             <label className="col-md-2 control-label" htmlFor="name">Name</label>
@@ -78,9 +103,9 @@ export default class Profile extends React.Component {
           <br />
           <div className="form-group">
             <div className="col-md-12" style={{ textAlign: "center" }}>
-              <button className="btn btn-primary" type="button" onClick={this._joinGame}>Join Game</button>
+              <button className="btn btn-primary" type="button" onClick={this._joinGamePressed}>Join Game</button>
               <span>&nbsp;</span>
-              <button className="btn btn-primary" type="button" onClick={this._createGame}>Create Game</button>
+              <button className="btn btn-primary" type="button" onClick={this._createGamePressed}>Create Game</button>
             </div>
           </div>
         </fieldset>
