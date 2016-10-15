@@ -7,7 +7,7 @@ const sockets = module.exports.sockets = {};
 var gameRooms = [];
 var gameLobby =[];
 
-module.exports.init = function(socket_io, cookieSessionMiddleware) {
+module.exports.init = function(socket_io, cookieSessionMiddleware, Lobby) {
 
   io = socket_io;
 

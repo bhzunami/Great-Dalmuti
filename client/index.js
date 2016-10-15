@@ -1,5 +1,7 @@
 import React from 'react';
-var socket = io.connect();
+import { Navigation } from './Navigation';
+
+const socket = io.connect();
 
 export default React.createClass({
 
@@ -10,9 +12,8 @@ export default React.createClass({
   componentDidMount() {
     socket.on('test', this._test);
     socket.emit("test", "bal")
-   
-  },
 
+  },
 
   _initialize() {
     socket.emit()
@@ -26,26 +27,7 @@ export default React.createClass({
 
   render() {
     return <div>
-      <nav className="navbar navbar-inverse navbar-fixed-top">
-        <div className="container">
-          <div className="navbar-header">
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <a className="navbar-brand" href="#">Project name</a>
-          </div>
-          <div id="navbar" className="collapse navbar-collapse">
-            <ul className="nav navbar-nav">
-              <li className="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       <div className="container">
 

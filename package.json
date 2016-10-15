@@ -6,7 +6,7 @@
   "scripts": {
     "webpack-watch": "./node_modules/webpack/bin/webpack.js -w",
     "express-server": "supervisor ./server",
-    "dev": "./node_modules/.bin/concurrently --kill-others \"npm run webpack-watch\" \"npm run express-server\"",
+    "dev": "concurrently --kill-others \"npm run webpack-watch\" \"npm run express-server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
