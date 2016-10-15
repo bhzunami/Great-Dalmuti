@@ -1,6 +1,6 @@
-import React from 'react';
+import { Router, Route, Link, browserHistory } from 'react-router'
 
-export class Navigation extends React.Component {
+export default class Navigation extends React.Component {
   render() {
     return <nav className="navbar navbar-inverse navbar-fixed-top">
       <div className="container">

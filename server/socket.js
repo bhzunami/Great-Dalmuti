@@ -22,11 +22,11 @@ module.exports.init = function(socket_io, cookieSessionMiddleware, lobby) {
     console.log("There are ", lobby.players.length, " players in gameLobby");
 
     // Send player id to client
-     Socket.send(socket.id, 'welcome', socket.id);     
+     Socket.send(socket.id, 'welcome', socket.id);
 
     //const s = new Socket(io);
     // Only send sockets to the new client
-   
+
     //io.to(socket.id).emit('welcome', socket.id);
     socket.on('game.create', data =>{
       try {
@@ -37,7 +37,7 @@ module.exports.init = function(socket_io, cookieSessionMiddleware, lobby) {
         Socket.sendRoom(socket.id, "game.created", game_id);
       } catch( error ) {
         Socket.send(socket.id, 'error', error);
-      } 
+      }
     });
 
     socket.on('game.join', data =>{

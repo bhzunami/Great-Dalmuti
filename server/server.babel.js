@@ -10,7 +10,13 @@ const Datastore = {
 
 
 const app = express();
-app.use('/', express.static('public'));
+// assets
+app.use('/bundled', express.static('public/bundled'));
+app.use('/static', express.static('public/static'));
+// client routes
+app.get(/^\//, (req, res) => {
+  res.sendFile('./public/index.html', { root: '.' });
+});
 
 const cookieSessionMiddleware = cookieSession({
   secret: process.env.SECRET || 'some_secret_key',

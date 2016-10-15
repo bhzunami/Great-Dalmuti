@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: './client/app.js',
+  entry: './client/App.js',
   output: {
     path: './public/bundled',
     filename: 'bundle.js'
@@ -17,6 +17,7 @@ module.exports = {
       { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader') },
       { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=10000' },
       { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
+      { test: require.resolve('jquery'), loader: 'expose?jQuery!expose?$' },
     ]
   },
   resolve: {
@@ -27,9 +28,9 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('style.css', { allChunks: true }),
     new webpack.ProvidePlugin({
-        jQuery: 'jquery',
-        $: 'jquery',
-        jquery: 'jquery'
+      jQuery: 'jquery',
+      $: 'jquery',
+      React: 'react',
     })
   ]
 };

@@ -29,7 +29,7 @@ export default class Lobby {
     }
     if(game.players.length == game.max_players) {
       console.log("ERROR: Maximum User reached for this game.")
-      throw "Maximum users reached"; 
+      throw "Maximum users reached";
     }
     const player = this.players.find(p => p.id == player_id);
     if( player === undefined || player.isPlaying ) {
