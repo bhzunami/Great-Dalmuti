@@ -15,8 +15,6 @@ class New extends React.Component {
     const game = getFormData('gameform');
 
     this.context.socket.emit('game.create', game, (gamedata, error) => {
-      console.log(gamedata, error);
-
       if (error) {
         alert("an error happened :( " + JSON.stringify(error));
         return;

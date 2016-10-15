@@ -19,10 +19,7 @@ class Join extends React.Component {
   }
 
   onClick() {
-    console.log(this.state);
-
     this.context.socket.emit('game.join', this.state.gameid, (gamedata, error) => {
-      console.log(gamedata, error);
       if (error) {
         alert("an error happened :( " + JSON.stringify(error));
         return;

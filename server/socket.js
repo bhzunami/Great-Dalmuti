@@ -115,7 +115,7 @@ const Socket = module.exports.Socket = {
 
   // Send message to a game room
   sendRoom: function (room, head, msg) {
-    io.to(room).emit(head, msg);
+    io.to(room).emit(room, head, msg);
   },
 
   // Send message to all connected clients

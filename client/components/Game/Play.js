@@ -1,11 +1,17 @@
 import { Link, browserHistory } from 'react-router'
-
 import { connect } from 'react-redux'
 
+import { updateGameData } from './../../actions'
+
 class Play extends React.Component {
+
+  componentDidMount() {
+    console.log(this);
+    this.context.socket.on(this.props.game.id, this.props.updateGameData);
+  }
+
   render() {
     const {game, player} = this.props;
-    console.log(game, player);
     return <div>
       <h1>Play game {this.props.params.id}</h1>
       <h3>Game data</h3>
@@ -30,7 +36,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    updateGameData: (event, data) => {
+      console.log("gameupdate", event, data);
+      dispatch(updateGameData(data))
+    }
   }
 }
 
