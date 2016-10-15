@@ -52,10 +52,30 @@ module.exports.init = function(socket_io, cookieSessionMiddleware, lobby) {
       }
     });
 
+    socket.on('game.start', data => {
+      try {
+        const game = lobby.games.find(g => g.id == data.game_id)
+        game.init();
+        Socket.sendRoom(game.id, 'game.start', '');
+      } catch( error ) {
+        Socket.send(socket.id, 'error', error);
+      }
+    });
+
+    socket.on('game.election', data => {
+      try {
+        const game = lobby.games.find(g => g.id == data.game_id);
+        game.elect(data);
+      } catch( error ) {
+        Socket.send(socket.id, 'error', error);
+      }
+      
+    });
+
     socket.on('disconnect', function() {
       delete sockets[socket.id];
       console.log("Player ", socket.id, "has left");
-      game_id = lobby.removePlayer(socket.id);
+      const game_id = lobby.removePlayer(socket.id);
       if(game_id > 0) {
         Socket.sendRoom(game.id, 'player_left', socket.id);
       }

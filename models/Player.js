@@ -5,6 +5,7 @@ export default class Player {
     this.avatar = avatar;
     this.points = 0;
     this.game_id = 0;
+    this.rank = 0;
   }
 
 }

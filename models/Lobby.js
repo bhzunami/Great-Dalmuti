@@ -44,7 +44,7 @@ export default class Lobby {
 
   removePlayer(id) {
     // Get player
-    const player = this.players.find(p = p.id == id);
+    const player = this.players.find(p => p.id == id);
     // Check if player was in a game
     if( player.game_id > 0) {
       // Remove player from game
