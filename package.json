@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "webpack-watch": "./node_modules/webpack/bin/webpack.js -w",
-    "express-server": "node ./server",
+    "express-server": "supervisor ./server",
     "dev": "./node_modules/.bin/concurrently --kill-others \"npm run webpack-watch\" \"npm run express-server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -55,6 +55,7 @@
     "sass-loader": "^4.0.2",
     "socket.io": "^1.5.0",
     "style-loader": "^0.13.1",
+    "supervisor": "^0.11.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2"
   },

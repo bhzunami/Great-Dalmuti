@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser')(process.env.SECRET || 'some_secret
 
 let io;
 const sockets = module.exports.sockets = {};
+var gameRooms = [];
+var gameLobby =[];
 
 module.exports.init = function(socket_io, cookieSessionMiddleware) {
 
@@ -15,6 +17,23 @@ module.exports.init = function(socket_io, cookieSessionMiddleware) {
 
   io.on('connection', function(socket) {
     sockets[socket.id] = socket;
+
+    console.log("New user ", socket.id);
+    console.log("The game Lobby", gameLobby);
+    const player = {
+      id : socket.id,
+      name: 'Nicolas',
+      avatar: 4
+    }
+    gameLobby.push(player);
+    console.log("There are ", gameLobby.length, " players in gameLobby");
+    console.log("Players:");
+    var p;
+    gameLobby.forEach(p => {
+      console.log("ID: ", p.id);
+    });
+      
+
     //const s = new Socket(io);
     // Only send sockets to the new client
     Socket.send(socket.id, 'welcome', socket.id);
