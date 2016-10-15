@@ -1,14 +1,13 @@
 "use strict";
 
+import Player from './../models/Player';
+
 const cookieParser = require('cookie-parser')(process.env.SECRET || 'some_secret_key');
 
 let io;
 const sockets = module.exports.sockets = {};
-var gameRooms = [];
-var gameLobby =[];
 
-module.exports.init = function(socket_io, cookieSessionMiddleware, Lobby) {
-
+module.exports.init = function(socket_io, cookieSessionMiddleware, lobby) {
   io = socket_io;
 
   io.use((socket, next) => {
@@ -17,35 +16,49 @@ module.exports.init = function(socket_io, cookieSessionMiddleware, Lobby) {
 
   io.on('connection', function(socket) {
     sockets[socket.id] = socket;
-
     console.log("New user ", socket.id);
-    console.log("The game Lobby", gameLobby);
-    const player = {
-      id : socket.id,
-      name: 'Nicolas',
-      avatar: 4
-    }
-    gameLobby.push(player);
-    console.log("There are ", gameLobby.length, " players in gameLobby");
-    console.log("Players:");
-    var p;
-    gameLobby.forEach(p => {
-      console.log("ID: ", p.id);
-    });
-      
+    const player = new Player(socket.id, 'Nicolas', 5);
+    lobby.players.push(player);
+    console.log("There are ", lobby.players.length, " players in gameLobby");
+
+    // Send player id to client
+     Socket.send(socket.id, 'welcome', socket.id);     
 
     //const s = new Socket(io);
     // Only send sockets to the new client
-    Socket.send(socket.id, 'welcome', socket.id);
+   
     //io.to(socket.id).emit('welcome', socket.id);
+    socket.on('game.create', data =>{
+      try {
+        const game_id = lobby.create_new_game(socket.id, data);
+        console.log("Create new game: ", game_id);
+        // Joining room
+        socket.join(game_id);
+        Socket.sendRoom(socket.id, "game.created", game_id);
+      } catch( error ) {
+        Socket.send(socket.id, 'error', error);
+      } 
+    });
 
-    socket.on('test', data =>{
-      Socket.send(socket.id, "test", data);
+    socket.on('game.join', data =>{
+      try {
+        const game = lobby.join_game(data.game_id, socket.id);
+        console.log("New Player connected to game: ", game.id);
+        console.log("Now there are ", game.players.length, " Player in the game");
+        socket.join(data.game_id);
+        Socket.sendRoom(data.game_id, "game.newPlayer", game);
+      } catch( error ) {
+        Socket.send(socket.id, 'error', error);
+      }
     });
 
     socket.on('disconnect', function() {
       delete sockets[socket.id];
-    //  console.log('user disconnected, bye');
+      console.log("Player ", socket.id, "has left");
+      game_id = lobby.removePlayer(socket.id);
+      if(game_id > 0) {
+        Socket.sendRoom(game.id, 'player_left', socket.id);
+      }
     });
   });
 
@@ -66,16 +79,20 @@ module.exports.init = function(socket_io, cookieSessionMiddleware, Lobby) {
 };
 
 const Socket = module.exports.Socket = {
-  send: function(client_id, head, msg) {
-    //console.log("Send message to", client_id, " with message", msg);
-    io.to(client_id).emit(head, msg);
+
+  // Send message to a specific user
+  send: function(client, head, msg) {
+    io.to(client).emit(head, msg);
   },
 
+  // Send message to a game room
+  sendRoom: function(room, head, msg) {
+    io.to(room).emit(head, msg);
+  },
+
+  // Send message to all connected clients
   sendAll: function(head, msg) {
     io.emit(head, msg);
   },
-  sendEvent: (event) => { // TODO don't send event to all users
-    Socket.sendAll("event", event);
-  }
 };
 

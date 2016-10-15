@@ -11,6 +11,9 @@ export default React.createClass({
 
   componentDidMount() {
     socket.on('test', this._test);
+    socket.on('new_player', game =>{
+      console.log("New player: ", game);
+    });
     socket.emit("test", "bal")
 
   },
@@ -28,9 +31,7 @@ export default React.createClass({
   render() {
     return <div>
       <Navigation />
-
       <div className="container">
-
         <div className="starter-template">
           <h1>Bootstrap starter template</h1>
           <p className="lead">Use this document as a way to quickly start any new project.<br /> All you get is this text and a mostly barebones HTML document.</p>

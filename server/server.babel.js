@@ -2,7 +2,7 @@ import express from 'express';
 const cookieSession = require('cookie-session');
 var http = require('http');
 
-import { Lobby } from './../models/Lobby';
+import Lobby from './../models/Lobby';
 
 const Datastore = {
   lobby: new Lobby(),
