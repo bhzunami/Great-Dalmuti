@@ -13,7 +13,6 @@ class New extends React.Component {
   }
   _createGamePressed() {
     const game = getFormData('gameform');
-
     this.context.socket.emit('game.create', game, (gamedata, error) => {
       if (error) {
         alert("an error happened :( " + JSON.stringify(error));

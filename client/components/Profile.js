@@ -1,8 +1,6 @@
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
-
 import { getFormData } from './../helpers'
-
 import { updatePlayerData } from './../actions'
 
 const avatars = [
@@ -64,25 +62,27 @@ class Profile extends React.Component {
   }
 
   _validateAndContinue(buttonPressed) {
-
     const playerData = getFormData('profileform');
 
     if (!this._validateForm(playerData)) return;
 
     // TODO show loading icon
+    console.log("Create new player: ", playerData);
+    this.context.socket.emit('player.create', playerData, (player, error) => {
+      if (error) {
+        console.log("Error: ", error);
+        return;
+      }
+      // do this in the callback on success
+      this.props.updatePlayerData(player);
 
-    //this.state.socket.emit('player.update', playerData, data => {
-    // callback, check if error, else proceed
-    //});
+      if (buttonPressed === "createGame") {
+        browserHistory.push('/game/new');
+      } else {
+        browserHistory.push('/game/join');
+      }
+    });
 
-    // do this in the callback on success
-    this.props.updatePlayerData(playerData);
-
-    if (buttonPressed === "createGame") {
-      browserHistory.push('/game/new');
-    } else {
-      browserHistory.push('/game/join');
-    }
 
   }
   render() {
@@ -136,6 +136,9 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
+Profile.contextTypes = {
+  socket: React.PropTypes.object
+};
 
 export default connect(
   mapStateToProps,

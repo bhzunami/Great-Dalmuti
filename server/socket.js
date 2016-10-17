@@ -17,50 +17,47 @@ module.exports.init = function (socket_io, cookieSessionMiddleware, lobby) {
   io.on('connection', function (socket) {
     sockets[socket.id] = socket;
     console.log("New user ", socket.id);
-    const player = new Player(socket.id, 'Nicolas', 5);
+    const player = new Player(socket.id);
     lobby.players.push(player);
     console.log("There are ", lobby.players.length, " players in gameLobby");
-
-    // Send player id to client
-    Socket.send(socket.id, 'welcome', socket.id);
-
-    //const s = new Socket(io);
-    // Only send sockets to the new client
 
     //io.to(socket.id).emit('welcome', socket.id);
     socket.on('game.create', (data, answer) => {
       try {
-        const game_id = lobby.create_new_game(socket.id, data);
-        console.log("Create new game: ", game_id);
+        const game = lobby.create_new_game(socket.id, data);
+        console.log("Create new game: ", game.id);
         // Joining room
-        socket.join(game_id);
-
-        // TODO Nicolas: send me the whole gamedata here
-        answer({id: game_id, name: data.name});
-
-        Socket.sendRoom(socket.id, "game.created", game_id);
+        socket.join(game.id);
+        console.log("Send game: " +game);
+        answer(game);
       } catch (error) {
         answer('error', error);
       }
     });
 
     socket.on('game.join', (game_id, answer) => {
+      const player = lobby.players.find(p => p.id == socket.id);
+      if(player === undefined ) {
+        console.log("ERROR: Player with ", socket.id, "not found");
+        answer(null, "Player not found");
+      }
+      const game = lobby.games.find(g => g.id == game_id);
+      if(game === undefined ) {
+        console.log("ERROR: Game with ", game_id, "not found");
+        answer(null, "Game not found");
+      }
       try {
-        const game = lobby.join_game(game_id, socket.id);
+        game.join(player);
         console.log("New Player connected to game: ", game.id);
         console.log("Now there are ", game.players.length, " Player in the game");
-        socket.join(game_id);
-
-        // TODO Nicolas: send me the whole gamedata here
-        answer({id: game_id});
-
-        Socket.sendRoom(game_id, "game.newPlayer", game);
+        socket.join(game.id);
+        answer(game);
       } catch (error) {
         answer('error', error);
       }
     });
 
-    socket.on('game.start', data => {
+    socket.on('game.start', (data, answer) => {
       try {
         const game = lobby.games.find(g => g.id == data.game_id)
         game.init();
@@ -70,7 +67,7 @@ module.exports.init = function (socket_io, cookieSessionMiddleware, lobby) {
       }
     });
 
-    socket.on('game.election', data => {
+    socket.on('game.election', (data, answer) => {
       try {
         const game = lobby.games.find(g => g.id == data.game_id);
         game.elect(data);
@@ -78,6 +75,14 @@ module.exports.init = function (socket_io, cookieSessionMiddleware, lobby) {
         Socket.send(socket.id, 'error', error);
       }
 
+    });
+
+
+    socket.on('player.create', (player_data, answer) => {
+      const player = lobby.players.find(p => p.id == socket.id);
+      player.name = player_data.name;
+      player.avatar = player_data.avatar;
+      answer(player);
     });
 
     socket.on('disconnect', function () {

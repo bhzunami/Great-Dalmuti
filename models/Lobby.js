@@ -12,33 +12,12 @@ export default class Lobby {
       console.log("ERROR: User not found");
       throw "Player with id " +creator_id +" was not found on server";
     }
+    // always create an 5 digits long game id
     const game_id = Math.floor(Math.random() * (10**5 - 10**4) + 10**4);
     const game = new Game(creator, game_id, data);
     this.games.push(game);
     console.log("Create new Game: ", game);
     creator.game_id = game_id;
-    return game_id;
-  }
-
-  join_game(game_id, player_id) {
-    console.log("Join game ", game_id, "with player id:", player_id);
-    const game = this.games.find(g => g.id == game_id);
-    if(game === undefined ) {
-      console.log("ERRRO: Game not found");
-      throw "Game with id" +game_id +" was not found on server";
-    }
-    if(game.players.length == game.max_players) {
-      console.log("ERROR: Maximum User reached for this game.")
-      throw "Maximum users reached";
-    }
-    const player = this.players.find(p => p.id == player_id);
-    if( player === undefined || player.isPlaying ) {
-      console.log("ERROR: Player not found");
-      throw "Player with id" +player_id +" was not found on server";
-    }
-    player.game_id = game_id;
-    game.players.push(player);
-    console.log("Player added to Game", player.id);
     return game;
   }
 

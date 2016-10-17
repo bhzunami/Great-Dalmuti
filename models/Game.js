@@ -37,4 +37,16 @@ export default class Game {
   removePlayer(player) {
     this.players = this.players.filter(p => p.id != player.id);
   }
+
+  join(player) {
+    console.log("Join game ", this.id, "with player id:", player.id);
+    if(this.players.length == this.max_players) {
+      console.log("ERROR: Maximum User reached for this game.")
+      throw "Maximum users reached";
+    }
+    player.game_id = this.id;
+    this.players.push(player);
+    console.log("Player added to Game", player.id);
+    return this;
+  }
 }
