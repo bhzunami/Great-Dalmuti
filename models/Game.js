@@ -13,28 +13,33 @@ export default class Game {
     this.players = [creator];
   }
 
+
+  // This starts a total new game
   start() {
-    // check if everything is ready to start
-    if (this.players.length < 4) {
+    if (this.players.length < this.max_player) {
       throw "There are not enough player";
     }
     this.started = true;
-
+    const assigned_ranks = [];
+    let rank = 0;
+    this.players.forEach(p => {
+      while (assigned_ranks.indexOf(rank) >= 0) {
+        rank = p.draw_start();
+      }
+      p.rank = rank;
+      p.create_card_set()
+    });
   }
 
-  elect(player_id, card_id) {
-    const player = this.players.find(p = p.id == player_id);
-    const locked_cards = this.players.filter(p => p.rank == card_id);
-    if (locked_cards.length > 0) {
-      console.log("WARN: This card was choosen before");
-      throw "card_locked";
-    }
-    player.rank = card_id;
-
-    return RANKS.card_id;
+  // Start the next round
+  next_round() {
+    this.players.forEach(p => {
+      p.create_card_set()
+    });
   }
 
   removePlayer(player) {
+    player.game_id = null;
     this.players = this.players.filter(p => p.id != player.id);
   }
 
