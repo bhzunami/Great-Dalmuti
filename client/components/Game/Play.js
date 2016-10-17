@@ -1,19 +1,69 @@
 import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
-import { updateGameData } from './../../actions'
+import './Play.scss'
 
-class Play extends React.Component {
+function distributeFields() {
+  var radius = 200;
+  var fields = $('.field'), container = $('#table'),
+    width = container.width(), height = container.height(),
+    angle = 0, step = (2 * Math.PI) / fields.length;
+
+  fields.each((field) => {
+    var x = Math.round(width / 2 + radius * Math.cos(angle) - $(field).width() / 2);
+    var y = Math.round(height / 2 + radius * Math.sin(angle) - $(field).height() / 2);
+
+    console.log($(field).text(), x, y, field);
+
+    $(field).css({
+      left: x + 'px',
+      top: y + 'px'
+    });
+    angle += step;
+  });
+}
+
+
+export default class Play extends React.Component {
 
   componentDidMount() {
-    console.log(this);
     this.context.socket.on(this.props.game.id, this.props.updateGameData);
   }
 
   render() {
-    const {game, player} = this.props;
+    let {game, player} = this.props;
+
+    game = {
+      max_player: 7,
+      name: "test",
+      started: false,
+      players: [
+1,2,3,4
+      ]
+    }
+
+    const width = 1000
+        , height = 600
+        , step = (2 * Math.PI) / game.max_player;
+
+    let angle = Math.PI / 2
+
+    const fields = Array.apply(null, { length: game.max_player }).map((elm, idx) => {
+      const x = Math.round(width / 2 + (width / 2) * Math.cos(angle) - 100 / 2);
+      const y = Math.round(height / 2 + (height / 2) * Math.sin(angle) - 100 / 2);
+
+      angle += step;
+
+      return <div key={idx} className="field" style={{left: x, top: y}}>{idx}</div>;
+  });
+
     return <div>
-      <h1>Play game {this.props.params.id}</h1>
+      <h1>Play game {this.props.params.id}: {game.name}</h1>
+      <div id="table">
+        {fields}
+        {!game.started && game.max_player == game.players.length && <button type="button" id="startbutton">Start Game!</button>}
+        <div id="oval"></div>
+      </div>
       <h3>Game data</h3>
       <pre>{JSON.stringify(game, null, 4)}</pre>
       <h3>Current Player</h3>
@@ -26,24 +76,3 @@ class Play extends React.Component {
 Play.contextTypes = {
   socket: React.PropTypes.object
 };
-
-const mapStateToProps = (state) => {
-  return {
-    game: state.game,
-    player: state.player,
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateGameData: (event, data) => {
-      console.log("gameupdate", event, data);
-      dispatch(updateGameData(data))
-    }
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Play);

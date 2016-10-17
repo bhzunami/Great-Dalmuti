@@ -1,0 +1,34 @@
+$height: 600px;
+$width: 1000px;
+
+#table {
+  width: $width;
+  height: $height;
+  position: relative;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+#oval {
+  width: $width;
+  height: $height;
+  background: #194D1E;
+  border-radius: 150%;
+}
+
+$player_width: 100px;
+$player_height: 100px;
+
+.field {
+  width: $player_width;
+  height: $player_height;
+  position: absolute;
+  background: #f00;
+}
+
+#startbutton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

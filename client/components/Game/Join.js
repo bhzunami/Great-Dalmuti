@@ -1,9 +1,7 @@
 import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
-import { updateGameData } from './../../actions'
-
-class Join extends React.Component {
+export default class Join extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -61,22 +59,3 @@ class Join extends React.Component {
 Join.contextTypes = {
   socket: React.PropTypes.object
 };
-
-const mapStateToProps = (state) => {
-  return {
-    player: state.player
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateGameData: (data) => {
-      dispatch(updateGameData(data))
-    }
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Join);

@@ -16,6 +16,7 @@ module.exports.init = function (socket_io, cookieSessionMiddleware, lobby) {
 
   io.on('connection', function (socket) {
     sockets[socket.id] = socket;
+    console.log("HANDSHAKE", socket.handshake.sessionID);
     console.log("New user ", socket.id);
     const player = new Player(socket.id);
     lobby.players.push(player);
@@ -95,20 +96,19 @@ module.exports.init = function (socket_io, cookieSessionMiddleware, lobby) {
     });
   });
 
-  //   io.set('authorization', function(handshake, callback) {
-  //     console.log(handshake);
-  //     if (handshake.headers.cookie) {
-  //       // pass a req, res, and next as if it were middleware
-  //       cookieParser(handshake, null, function(err) {
-  //         handshake.sessionID = handshake.cookies['session'];
-  //         // or if you don't have signed cookies
-  // //        handshake.sessionID = handshake.cookies['connect.sid'];
-
-  //       });
-  //     } else {
-  //       callback('No session.', false);
-  //     }
-  //   });
+  io.use((socket, next) => {
+    if (socket.handshake.headers.cookie) {
+      // pass a req, res, and next as if it were middleware
+      cookieParser(socket.handshake, null, function(err) {
+        socket.handshake.sessionID = socket.handshake.cookies['session'];
+        // or if you don't have signed cookies
+//        handshake.sessionID = handshake.cookies['connect.sid'];
+        next();
+      });
+    } else {
+    next(new Error('Authentication error'));
+    }
+  });
 };
 
 const Socket = module.exports.Socket = {

@@ -6,7 +6,7 @@ export default class Game {
     this.creator = creator;
     this.id = id;
     this.name = name;
-    this.max_player = max_player;
+    this.max_player = parseInt(max_player, 10);
     this.passcode = passcode;
     this.finish = false;
     this.started = false;
@@ -40,7 +40,7 @@ export default class Game {
 
   join(player) {
     console.log("Join game ", this.id, "with player id:", player.id);
-    if(this.players.length == this.max_players) {
+    if (this.players.length == this.max_players) {
       console.log("ERROR: Maximum User reached for this game.")
       throw "Maximum users reached";
     }

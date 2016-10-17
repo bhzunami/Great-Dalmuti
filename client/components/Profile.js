@@ -37,13 +37,6 @@ class Profile extends React.Component {
     this._createGamePressed = this._createGamePressed.bind(this);
   }
 
-  componentDidMount() {
-  }
-
-  componentWillUnmount() {
-
-  }
-
   _validateForm(playerData) {
     if (playerData.name == "") {
       alert("Please provide a name!");
@@ -67,7 +60,6 @@ class Profile extends React.Component {
     if (!this._validateForm(playerData)) return;
 
     // TODO show loading icon
-    console.log("Create new player: ", playerData);
     this.context.socket.emit('player.create', playerData, (player, error) => {
       if (error) {
         console.log("Error: ", error);

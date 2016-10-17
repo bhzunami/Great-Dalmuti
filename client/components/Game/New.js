@@ -3,9 +3,7 @@ import { connect } from 'react-redux'
 
 import { getFormData } from './../../helpers'
 
-import { updateGameData } from './../../actions'
-
-class New extends React.Component {
+export default class New extends React.Component {
   constructor() {
     super();
 
@@ -75,23 +73,3 @@ class New extends React.Component {
 New.contextTypes = {
   socket: React.PropTypes.object
 };
-
-
-const mapStateToProps = (state) => {
-  return {
-    game: state.game
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateGameData: (data) => {
-      dispatch(updateGameData(data))
-    }
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(New);
