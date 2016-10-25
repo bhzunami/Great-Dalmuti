@@ -39,13 +39,14 @@ export default class Lobby {
     // Get player
     const player = this.players.find(p => p.id == id);
     if (player === undefined) { return 0; }
+
+    player.active = false;
     this.players = this.players.filter(p => p.id != id);
     // Check if player was in a game
     if (player.game_id > 0) {
       // Remove player from game
       const game = this.games.find(g => g.id == player.game_id);
       if (game !== undefined) {
-        game.removePlayer(player);
         return game.id;
       }
     }
