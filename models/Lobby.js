@@ -4,7 +4,6 @@ import Player from './Player';
 export default class Lobby {
   constructor() {
     this.games = [];
-    this.player_storage = [];
     this.players = [];
   }
 
@@ -23,15 +22,13 @@ export default class Lobby {
 
 
   connect(id) {
-    let player = this.player_storage.find(p => p.id == id);
+    let player = this.players.find(p => p.id == id);
     if (player === undefined) {
       console.log("Connect new Player with id: ", id);
       player = new Player(id);
-      this.player_storage.push(player);
+      this.players.push(player);
     }
-    console.log("New player in lobby: ", player.id);
-    // TODO: Only add player to players if he does not exist there
-    this.players.push(player);
+    player.active = true
     return player;
   }
 
@@ -39,9 +36,7 @@ export default class Lobby {
     // Get player
     const player = this.players.find(p => p.id == id);
     if (player === undefined) { return 0; }
-
     player.active = false;
-    this.players = this.players.filter(p => p.id != id);
     // Check if player was in a game
     if (player.game_id > 0) {
       // Remove player from game

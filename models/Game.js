@@ -85,14 +85,16 @@ export default class Game {
   join(player) {
     console.log("Join game ", this.id, "with player id:", player.id);
     if (this.players.length == this.max_players) {
-      console.log("ERROR: Maximum User reached for this game.")
+      console.log("ERROR: Maximum User reached for this game.");
       throw "Maximum users reached";
     }
 
-    if (this.player.find(p => p.id == player.id)) return;
+    if (this.players.find(p => p.id == player.id)) {
+      console.log("Dublicate user found. Can not join twice with id ", player.id);
+      return;
+    }
 
     player.game_id = this.id;
     this.players.push(player);
-    console.log("Player added to Game", player.id);
   }
 }

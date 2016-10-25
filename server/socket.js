@@ -11,8 +11,8 @@ module.exports.init = function (socket_io, lobby) {
   io.on('connection', function (socket) {
     sockets[socket.handshake.sessionID] = socket;
     const player = lobby.connect(socket.handshake.sessionID);
-    console.log("There are ", lobby.players.length, " players in gameLobby");
-    console.log("There are ", lobby.player_storage.length, " players in storage");
+    console.log("There are ", lobby.players.filter(p => p.active).length, " active players in gameLobby");
+    console.log("There are ", lobby.players.filter(p => !p.active).length, " inactive players in gameLobby");
 
     socket.on('game.create', (data, answer) => {
       try {
@@ -45,7 +45,6 @@ module.exports.init = function (socket_io, lobby) {
       }
       try {
         game.join(player);
-        console.log("New Player connected to game: ", game.id);
         console.log("Now there are ", game.players.length, " Player in the game");
         socket.join(game.id);
         answer(game);
