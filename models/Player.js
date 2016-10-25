@@ -9,6 +9,7 @@ export default class Player {
     this.game_id = 0;
     this.rank = 0;
     this.cards = []
+    this.active = True
   }
 
 

@@ -2,10 +2,20 @@ import RANKS from './../models/Rank';
 
 const card_set = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13]
 
+/**
+ * Class representing a Game.
+ *
+ * @class Game
+ */
 export default class Game {
-  constructor(creator, id, {max_player = 4, passcode = "", name = ""}) {
+  /**
+   * @constructor
+   * @param {Player} creator - The creator of the game
+   * @param {Dict} - Optional parameters
+   */
+  constructor(creator, {max_player = 4, passcode = "", name = ""}) {
     this.creator = creator;
-    this.id = id;
+    this.id = Math.floor(Math.random() * (10 ** 5 - 10 ** 4) + 10 ** 4);;
     this.name = name;
     this.max_player = parseInt(max_player, 10);
     this.passcode = passcode;
@@ -33,23 +43,22 @@ export default class Game {
     return Math.floor(Math.random() * 12) + 1;
   }
 
-
   // This starts a total new game
   start() {
-    if (this.players.length < this.max_player) {
-      throw "There are not enough player";
-    }
+    // if (this.players.length < this.max_player) {
+    //   throw "There are not enough player";
+    // }
     this.started = true;
     const assigned_ranks = [];
     let rank = 0;
     this.players.forEach(p => {
       while (assigned_ranks.indexOf(rank) >= 0) {
-        rank = draw_start();
+        rank = this.draw_start();
       }
       p.rank = rank;
-      create_card_set()
+      this.create_card_set()
     });
-    deal_cards();
+    this.deal_cards();
   }
 
   deal_cards() {
@@ -85,6 +94,5 @@ export default class Game {
     player.game_id = this.id;
     this.players.push(player);
     console.log("Player added to Game", player.id);
-    return this;
   }
 }

@@ -15,11 +15,9 @@ export default class Lobby {
       throw "Player with id " + creator_id + " was not found on server";
     }
     // always create an 5 digits long game id
-    const game_id = Math.floor(Math.random() * (10 ** 5 - 10 ** 4) + 10 ** 4);
-    const game = new Game(creator, game_id, data);
+    const game = new Game(creator, data);
     this.games.push(game);
-    console.log("Create new Game: ", game);
-    creator.game_id = game_id;
+    creator.game_id = game.id;
     return game;
   }
 
@@ -31,6 +29,7 @@ export default class Lobby {
       player = new Player(id);
       this.player_storage.push(player);
     }
+    console.log("New player in lobby: ", player.id);
     // TODO: Only add player to players if he does not exist there
     this.players.push(player);
     return player;
