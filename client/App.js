@@ -4,13 +4,16 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 
-import reducers from './reducers'
-
 // Twitter Bootstrap init
 import 'bootstrap-loader';
 
 // CSS files
 import './App.scss';
+
+// more stuff
+import reducers from './reducers'
+import { updatePlayerData } from './actions'
+import socket from './socket'
 
 // Components
 import Index from './components/Index';
@@ -19,13 +22,18 @@ import Layout from './components/Layout';
 import Game from './components/Game';
 
 const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-const history = syncHistoryWithStore(browserHistory, store)
+const history = syncHistoryWithStore(browserHistory, store);
+
+
+socket.emit('player.self', (playerdata) => {
+  store.dispatch(updatePlayerData(playerdata));
+});
 
 // routing & render
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
-      <Route path="/" component={Layout}>
+      <Route path="/" component={Layout} socket={socket}>
         <IndexRoute path="" component={Index} />
         <Route path="profile" component={Profile} />
         <Route path="game" component={Game.Game}>

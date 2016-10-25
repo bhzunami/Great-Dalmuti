@@ -79,6 +79,9 @@ export default class Game {
       console.log("ERROR: Maximum User reached for this game.")
       throw "Maximum users reached";
     }
+
+    if (this.player.find(p => p.id == player.id)) return;
+
     player.game_id = this.id;
     this.players.push(player);
     console.log("Player added to Game", player.id);

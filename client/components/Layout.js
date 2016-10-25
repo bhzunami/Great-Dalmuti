@@ -1,11 +1,9 @@
-import Navigation from './Navigation';
-
-const socket = io.connect();
+import Navigation from './Navigation'
 
 export default class Profile extends React.Component {
   getChildContext() {
     return {
-      socket: socket
+      socket: this.props.route.socket // passed down from App.js
     };
   }
   render() {
@@ -17,6 +15,7 @@ export default class Profile extends React.Component {
     </div>
   }
 }
+
 Profile.childContextTypes = {
   socket: React.PropTypes.object
 };

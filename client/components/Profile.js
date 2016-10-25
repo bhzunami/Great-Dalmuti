@@ -31,12 +31,6 @@ const avatars = [
 ].sort();
 
 class Profile extends React.Component {
-  constructor(props) {
-    super(props);
-    this._joinGamePressed = this._joinGamePressed.bind(this);
-    this._createGamePressed = this._createGamePressed.bind(this);
-  }
-
   _validateForm(playerData) {
     if (playerData.name == "") {
       alert("Please provide a name!");
@@ -59,13 +53,11 @@ class Profile extends React.Component {
 
     if (!this._validateForm(playerData)) return;
 
-    // TODO show loading icon
     this.context.socket.emit('player.create', playerData, (player, error) => {
       if (error) {
         console.log("Error: ", error);
         return;
       }
-      // do this in the callback on success
       this.props.updatePlayerData(player);
 
       if (buttonPressed === "createGame") {
@@ -78,6 +70,8 @@ class Profile extends React.Component {
 
   }
   render() {
+    if (!this.props.player.id) return <div>Loading...</div>;
+
     return <div className="col-md-6 col-md-offset-3">
       <h1>Create your profile</h1>
       <br />
@@ -103,15 +97,15 @@ class Profile extends React.Component {
           <br />
           <div className="form-group">
             <div className="col-md-12" style={{ textAlign: "center" }}>
-              <button className="btn btn-primary" type="button" onClick={this._joinGamePressed}>Join Game</button>
-              <span>&nbsp;</span>
-              <button className="btn btn-primary" type="button" onClick={this._createGamePressed}>Create Game</button>
+              <button className="btn btn-primary" type="button" onClick={::this._joinGamePressed}>Join Game</button>
+            <span>&nbsp;</span>
+            <button className="btn btn-primary" type="button" onClick={::this._createGamePressed}>Create Game</button>
             </div>
           </div>
         </fieldset>
-      </form>
+      </form >
 
-    </div>
+    </div >
   }
 }
 

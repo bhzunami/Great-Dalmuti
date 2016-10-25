@@ -8,51 +8,41 @@ export default class Join extends React.Component {
       gameid: null
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.onClick = this.onClick.bind(this);
   }
 
   handleChange(event) {
     this.setState({ gameid: event.target.value });
   }
 
-  onClick() {
-    this.context.socket.emit('game.join', this.state.gameid, (gamedata, error) => {
-      if (error) {
-        alert("an error happened :( " + JSON.stringify(error));
-        return;
-      }
-
-      this.props.updateGameData(gamedata);
-
-      browserHistory.push('/game/play/' + this.state.gameid);
-    });
+  onSubmit(e) {
+    e.preventDefault();
+    browserHistory.push('/game/play/' + this.state.gameid);
   }
 
   render() {
     return <div className="col-md-6 col-md-offset-3">
 
-      <form className="form-horizontal">
+      <form className="form-horizontal" onSubmit={::this.onSubmit}>
         <fieldset>
 
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="gameid">Game ID</label>
-            <div className="col-md-4">
-              <input id="gameid" name="gameid" type="text" value={this.state.value} onChange={this.handleChange} placeholder="12345" className="form-control input-md" required="" />
+        <div className="form-group">
+          <label className="col-md-4 control-label" htmlFor="gameid">Game ID</label>
+          <div className="col-md-4">
+            <input id="gameid" name="gameid" type="text" value={this.state.value} onChange={::this.handleChange} placeholder="12345" className="form-control input-md" required="" />
 
             </div>
-          </div>
+        </div>
 
-          <div className="form-group">
-            <div className="col-md-4 col-md-offset-4 ">
-              <button id="joingame" name="joingame" className="btn btn-success" type="button" onClick={this.onClick}>Join Game</button>
-            </div>
+        <div className="form-group">
+          <div className="col-md-4 col-md-offset-4 ">
+            <button id="joingame" name="joingame" className="btn btn-success">Join Game</button>
           </div>
+        </div>
 
-        </fieldset>
+      </fieldset>
       </form>
 
-    </div>
+    </div >
   }
 }
 

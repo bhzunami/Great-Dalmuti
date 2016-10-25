@@ -27,26 +27,20 @@ function distributeFields() {
 export default class Play extends React.Component {
 
   componentDidMount() {
-    this.context.socket.on(this.props.game.id, this.props.updateGameData);
+    this.context.socket.on(this.props.params.id, this.props.updateGameData);
+
+    this.context.socket.emit('game.join', this.props.params.id, () => { });
+    this.context.socket.emit('game.get', this.props.params.id, this.props.updateGameData);
   }
 
   render() {
     let {game, player} = this.props;
 
-    game = {
-      max_player: 7,
-      name: "test",
-      started: false,
-      players: [
-1,2,3,4
-      ]
-    }
-
     const width = 1000
-        , height = 600
-        , step = (2 * Math.PI) / game.max_player;
+      , height = 600
+      , step = (2 * Math.PI) / game.max_player;
 
-    let angle = Math.PI / 2
+    let angle = Math.PI / 2;
 
     const fields = Array.apply(null, { length: game.max_player }).map((elm, idx) => {
       const x = Math.round(width / 2 + (width / 2) * Math.cos(angle) - 100 / 2);
@@ -54,8 +48,12 @@ export default class Play extends React.Component {
 
       angle += step;
 
-      return <div key={idx} className="field" style={{left: x, top: y}}>{idx}</div>;
-  });
+      return <div key={idx} className="field" style={{ left: x, top: y }}>{idx}</div>;
+    });
+
+    if (!player.id || !game.name) {
+      return <div>Loading...</div>;
+    }
 
     return <div>
       <h1>Play game {this.props.params.id}: {game.name}</h1>
