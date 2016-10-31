@@ -34,7 +34,7 @@ export default class Play extends React.Component {
   }
 
   startGame() {
-    this.context.socket.emit('game.start', this.props.params.id, (game, error) => {
+    this.context.socket.emit('game.start', (game, error) => {
       if (error) {
         alert(error);
         console.log(error);
@@ -46,7 +46,7 @@ export default class Play extends React.Component {
 
   render() {
     let {game, player} = this.props;
-
+    console.log(game);
     const width = 1000
       , height = 600
       , step = (2 * Math.PI) / game.max_player;

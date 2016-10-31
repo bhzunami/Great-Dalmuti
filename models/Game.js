@@ -61,26 +61,33 @@ export default class Game {
 
   // This starts a total new game
   start() {
-    // if (this.players.length < this.max_player) {
-    //   throw "There are not enough player";
-    // }
+    if (this.players.length < this.max_player) {
+      throw "There are not enough player";
+    }
+
+    this.assign_ranks();
+    this.deal_cards();
+
     this.started = true;
+  }
+
+  assign_ranks() {
     const assigned_ranks = [];
+
     this.players.forEach(p => {
       let rank = 0;
-      while (assigned_ranks.indexOf(rank) > -1) {
-        rank = this.draw_start();
-      }
+      do {
+        rank = Game.draw_start();
+      } while (assigned_ranks.indexOf(rank) > -1)
+
       assigned_ranks.push(rank);
       p.rank = rank;
     });
     this.players = this.players.sort((a, b) => a.rank > b.rank);
-
-    this.deal_cards();
   }
 
   deal_cards() {
-    const cards = this.get_card_set();
+    const cards = Game.get_card_set();
 
     let i = 0;
     while (cards.length > 0) {
@@ -91,10 +98,7 @@ export default class Game {
 
   // Start the next round
   next_round() {
-    this.players.forEach(p => {
-      get_card_set();
-      deal_cards();
-    });
+    this.deal_cards();
   }
 
   removePlayer(player) {
