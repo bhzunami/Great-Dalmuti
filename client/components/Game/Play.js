@@ -33,6 +33,17 @@ export default class Play extends React.Component {
     this.context.socket.emit('game.get', this.props.params.id, this.props.updateGameData);
   }
 
+  startGame() {
+    this.context.socket.emit('game.start', this.props.params.id, (game, error) => {
+      if (error) {
+        alert(error);
+        console.log(error);
+        return;
+      }
+
+    });
+  }
+
   render() {
     let {game, player} = this.props;
 
@@ -59,15 +70,15 @@ export default class Play extends React.Component {
       <h1>Play game {this.props.params.id}: {game.name}</h1>
       <div id="table">
         {fields}
-        {!game.started && game.max_player == game.players.length && <button type="button" id="startbutton">Start Game!</button>}
+        {!game.started && game.max_player == game.players.length && <button type="button" id="startbutton" onClick={::this.startGame}>Start Game!</button>}
         <div id="oval"></div>
-      </div>
+    </div>
       <h3>Game data</h3>
       <pre>{JSON.stringify(game, null, 4)}</pre>
       <h3>Current Player</h3>
       <h4>{player.name}</h4>
       <img src={player.avatar} />
-    </div>
+    </div >
   }
 }
 

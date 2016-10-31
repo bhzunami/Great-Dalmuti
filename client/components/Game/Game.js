@@ -1,10 +1,19 @@
-import { Link, browserHistory } from 'react-router'
+import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
 import { updateGameData } from './../../actions'
 
 class Game extends React.Component {
+  componentWillMount() {
+    if (!this.props.player.name) {
+      browserHistory.push("/Profile");
+    }
+  }
+
   render() {
+    if (!this.props.player.name) {
+      return <div>Loading...</div>;
+    }
     return React.cloneElement(this.props.children, {
       player: this.props.player,
       game: this.props.game,

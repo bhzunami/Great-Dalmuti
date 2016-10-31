@@ -58,7 +58,8 @@ module.exports.init = function (socket_io, lobby) {
       try {
         const game = lobby.games.find(g => g.id == data.game_id);
         game.start(data);
-        Socket.sendRoom(game.id, 'start', game);
+        answer(game);
+        Socket.sendRoom(game.id, game);
       } catch (error) {
         answer(null, error);
       }

@@ -7,7 +7,6 @@ export default class Join extends React.Component {
     this.state = {
       gameid: null
     };
-
   }
 
   handleChange(event) {
@@ -45,7 +44,3 @@ export default class Join extends React.Component {
     </div >
   }
 }
-
-Join.contextTypes = {
-  socket: React.PropTypes.object
-};
