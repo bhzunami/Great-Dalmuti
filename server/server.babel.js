@@ -1,11 +1,24 @@
 import express from 'express'
 import http from 'http'
+import fs from 'fs'
 
 import Lobby from './../models/Lobby'
 
-const Datastore = {
-  lobby: new Lobby(),
-}
+
+// read data on startup
+const dataFile = "data.json";
+
+const Datastore = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
+
+// reinit objects
+Datastore.lobby = new Lobby(Datastore.lobby);
+
+// save data every second
+setInterval(() => {
+  fs.writeFile(dataFile, JSON.stringify(Datastore), (err) => {
+    if (err) console.error("Error writing JSON file!", err);
+  });
+}, 1000);
 
 
 const app = express();

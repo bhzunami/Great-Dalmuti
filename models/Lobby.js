@@ -2,9 +2,18 @@ import Game from './Game';
 import Player from './Player';
 
 export default class Lobby {
-  constructor() {
-    this.games = [];
-    this.players = [];
+  // constructor() {
+  //   this.games = [];
+  //   this.players = [];
+  // }
+  constructor(lobby) {
+    if (lobby === undefined) {
+      this.games = [];
+      this.players = [];
+    } else {
+      this.games = lobby.games;
+      this.players = lobby.players;
+    }
   }
 
   create_new_game(creator_id, data) {

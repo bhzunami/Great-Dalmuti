@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import './Play.scss'
 
+import CardDrawer from './CardDrawer'
+
 function distributeFields() {
   var radius = 200;
   var fields = $('.field'), container = $('#table'),
@@ -44,6 +46,10 @@ export default class Play extends React.Component {
     });
   }
 
+  cardDrawn() {
+    console.log("card drawn", arguments);
+  }
+
   render() {
     let {game, player} = this.props;
     console.log(game);
@@ -71,7 +77,8 @@ export default class Play extends React.Component {
       <div id="table">
         {fields}
         {!game.started && game.max_player == game.players.length && <button type="button" id="startbutton" onClick={::this.startGame}>Start Game!</button>}
-        <div id="oval"></div>
+        {game.started && !player.cardDrawn && <CardDrawer cardRank={player.rank} callback={::this.cardDrawn} />}
+      <div id="oval"></div>
     </div>
       <h3>Game data</h3>
       <pre>{JSON.stringify(game, null, 4)}</pre>

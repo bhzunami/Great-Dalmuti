@@ -1,20 +1,4 @@
-import RANKS from './Rank';
-
-const card_set = [
-  1,
-  2, 2,
-  3, 3, 3,
-  4, 4, 4, 4,
-  5, 5, 5, 5, 5,
-  6, 6, 6, 6, 6, 6,
-  7, 7, 7, 7, 7, 7, 7,
-  8, 8, 8, 8, 8, 8, 8, 8,
-  9, 9, 9, 9, 9, 9, 9, 9, 9,
-  10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-  11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
-  12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-  13, 13
-];
+import { getCardsShuffled } from './Cards';
 
 /**
  * Class representing a Game.
@@ -36,22 +20,6 @@ export default class Game {
     this.finish = false;
     this.started = false;
     this.players = [creator];
-  }
-
-  // modern Fisher–Yates shuffle
-  // Link: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
-  static get_card_set() {
-    const cards = card_set.slice(0);
-
-    let tmp;
-    for (var i = cards.length; i-- > 1;) {
-      let j = Math.floor(Math.random() * cards.length);
-      tmp = cards[i];
-      cards[i] = cards[j];
-      cards[j] = tmp;
-    }
-
-    return cards;
   }
 
   // Draw a card for the start of the game
@@ -87,7 +55,7 @@ export default class Game {
   }
 
   deal_cards() {
-    const cards = Game.get_card_set();
+    const cards = getCardsShuffled();
 
     let i = 0;
     while (cards.length > 0) {
