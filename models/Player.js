@@ -1,5 +1,10 @@
 
-
+/**
+   * @constructor
+   * @param {id}   The player id
+   * @param {name} player name
+   * @param {avatar} name of the avatar file name
+   */
 export default class Player {
   constructor(id, name, avatar) {
     this.id = id;

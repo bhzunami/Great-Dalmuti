@@ -1,3 +1,5 @@
+// All existing ranks in the game
+// used as Map
 export const RANKS = {
     1: 'Great Dalmuti',
     2: 'Erzbischof',
@@ -14,13 +16,16 @@ export const RANKS = {
     13: 'Narr'
 };
 
+// static URL for cards
 const CARD_URLS = {
     hidden: "/static/cards/back.png"
 };
+
+// Get the correct card for the rank
 Object.keys(RANKS).forEach(rank => CARD_URLS[rank] = `/static/cards/karte${rank}.jpg`);
 export { CARD_URLS };
 
-
+// A card set represents all cards that are in one game
 export const CARD_SET = [
     1,
     2, 2,
@@ -39,9 +44,9 @@ export const CARD_SET = [
 
 // modern Fisher–Yates shuffle
 // Link: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+// Shuffle a card set for a game
 export function getCardsShuffled() {
     const cards = CARD_SET.slice(0);
-
     let tmp;
     for (var i = cards.length; i-- > 1;) {
         let j = Math.floor(Math.random() * cards.length);
