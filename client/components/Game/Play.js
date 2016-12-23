@@ -6,6 +6,13 @@ import './Play.scss'
 import CardDrawer from './CardDrawer'
 import PlayerHand from './PlayerHand'
 
+function errorCallback(_, error) {
+  if (error) {
+    alert(error);
+    console.log(error);
+  }
+}
+
 function distributeFields() {
   var radius = 200;
   var fields = $('.field'), container = $('#table'),
@@ -37,29 +44,15 @@ export default class Play extends React.Component {
   }
 
   startGame() {
-    this.context.socket.emit('game.start', (game, error) => {
-      if (error) {
-        alert(error);
-        console.log(error);
-        return;
-      }
-
-    });
+    this.context.socket.emit('game.start', errorCallback);
   }
 
   cardDrawn() {
     this.props.updatePlayerExtraData({ cardDrawn: true });
   }
 
-  cardClickedCallback(cardIdx) {
-    let cardsIdx = this.props.player.localdata.selectedCardsIdx || [];
-    const arrIdx = cardsIdx.indexOf(cardIdx);
-    if (arrIdx > -1) {
-      cardsIdx.splice(arrIdx, 1);
-    } else {
-      cardsIdx.push(cardIdx);
-    }
-    this.props.updatePlayerLocalData({ selectedCardsIdx: cardsIdx });
+  onPlayClick(cards) {
+    this.context.socket.emit('game.card_played', cards, errorCallback);
   }
 
   render() {
@@ -68,6 +61,8 @@ export default class Play extends React.Component {
 
     const game_player = game.players[player.id];
 
+
+    // draw table
     const width = 1000
       , height = 600
       , step = (2 * Math.PI) / game.max_player;
@@ -83,6 +78,7 @@ export default class Play extends React.Component {
       return <div key={idx} className="field" style={{ left: x, top: y }}>{idx}</div>;
     });
 
+
     if (!player.id || !game.name) {
       return <div>Loading...</div>;
     }
@@ -95,7 +91,7 @@ export default class Play extends React.Component {
         {game.started && !game_player.extradata.cardDrawn && <CardDrawer cardRank={player.rank} callback={::this.cardDrawn} />}
       <div id="oval"></div>
     </div>
-      <div id="showPlayerCards">{game.started && game_player.extradata.cardDrawn && <PlayerHand cards={game_player.cards} selectedCardsIdx={player.localdata.selectedCardsIdx || []} cardClickedCallback={::this.cardClickedCallback}  />}</div>
+      <div id="showPlayerCards">{game.started && game_player.extradata.cardDrawn && <PlayerHand cards={game_player.cards} onPlayClick={::this.onPlayClick}  />}</div>
       <h3>Game data</h3>
       <pre>{JSON.stringify(game, null, 4)}</pre>
       <h3>Current Player</h3>

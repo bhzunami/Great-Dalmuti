@@ -33,9 +33,12 @@ export default class Game {
     game.finish = false;
     game.started = false;
     game.players = {};
-    game.player_ranks = []
+    game.player_ranks = [];
     game.next_player;
     game.round = 0;
+    game.last_played_cards = [];
+    game.last_played_player;
+
     game.join(creator);
 
     return game;
@@ -91,30 +94,62 @@ export default class Game {
       this.players[player_keys[i]].cards.push(cards.pop());
       i = (i + 1) % this.max_player;
     }
-  }
 
+    Object.keys(this.players).forEach(p_id => this.players[p_id].cards.sort((a, b) => a - b));
+  }
 
   /**
    * When user plays a card
    */
   play_card(player_id, cards) {
-    player_cards = this.players[player].cards
-    this.player_cards.sort((a, b) => a - b);
+    if (cards.length == 0) {
+      // player has passed
+      this.players[player_id].passed = true;
+      this.update_next_player();
+      this.check_round_finished();
+      return;
+    }
+
+    const player_cards = this.players[player_id].cards
 
     if (player_cards.length < cards.length) {
       throw "More cards are played";
     }
-    number = cards[0];
-    // get all cards with this number
-    found = player_cards.filter(card => card == number)
-    if (found.length < cards.length) {
-      throw "You do not have this num of cards";
-    }
+    const number = cards[0];
+    // get all cards with this number ToDO Joker Check
+    // const found = player_cards.filter(card => card == number)
+    // if (found.length < cards.length) {
+    //   throw "You do not have this num of cards";
+    // }
+
     // Remove the played cards from player
-    start = player_cards.indexOf(number);
-    this.player_cards.splice(start, start + cards.length);
+    const start = player_cards.indexOf(number);
+    player_cards.splice(start, cards.length);
+
+    // update last_played_cards
+    this.last_played_cards = cards;
+    this.last_played_player = player_id;
+
+    this.update_next_player();
   }
 
+  update_next_player() {
+    // get current player index, and select next player index, write to next_player
+    this.next_player = this.player_ranks[((this.player_ranks.indexOf(this.next_player) + 1) % this.player_ranks.length)];
+
+    // TODO: need to check if player still has cards
+
+    // TODO:     this.check_game_finished();
+  }
+
+  check_round_finished() {
+    if (Object.keys(this.players).every(p => this.players[p].passed)) {
+      // new round
+      Object.keys(this.players).forEach(p => this.players[p].passed = false);
+      this.next_player = this.last_played_player;
+      this.last_played_cards = [];
+    }
+  }
 
   /**
    *  Start the next round
@@ -150,6 +185,6 @@ export default class Game {
     }
     // Add player
     player.game_id = this.id;
-    this.players[player.id] = { rank: 0, points: 0, cards: [], extradata: {} }
+    this.players[player.id] = { rank: 0, points: 0, cards: [], extradata: {}, passed: false }
   }
 }
