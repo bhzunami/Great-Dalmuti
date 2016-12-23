@@ -5,6 +5,7 @@ import './Play.scss'
 
 import CardDrawer from './CardDrawer'
 import PlayerHand from './PlayerHand'
+import Card from './Card'
 
 function errorCallback(_, error) {
   if (error) {
@@ -35,10 +36,16 @@ function distributeFields() {
 
 
 export default class Play extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { players: [] };
 
+  }
   componentDidMount() {
+    // listen on game updates
     this.context.socket.on(this.props.params.id, this.props.updateGameData);
 
+    // join game, get data
     this.context.socket.emit('game.join', this.props.params.id, () => { });
     this.context.socket.emit('game.get', this.props.params.id, this.props.updateGameData);
   }
@@ -69,13 +76,23 @@ export default class Play extends React.Component {
 
     let angle = Math.PI / 2;
 
-    const fields = Array.apply(null, { length: game.max_player }).map((elm, idx) => {
+    const myPosition = game.player_ranks.indexOf(player.id);
+
+    const playerIcons = Array.apply(null, { length: game.max_player }).map((elm, idx) => {
       const x = Math.round(width / 2 + (width / 2) * Math.cos(angle) - 100 / 2);
       const y = Math.round(height / 2 + (height / 2) * Math.sin(angle) - 100 / 2);
 
       angle += step;
 
-      return <div key={idx} className="field" style={{ left: x, top: y }}>{idx}</div>;
+      if (idx >= game.allplayers.length) {
+        return null;
+      }
+
+      const idxOffset = (idx + myPosition) % game.allplayers.length;
+      const player = game.allplayers.find(p => p.id == game.player_ranks[idxOffset]);
+      const currentPlayer = game.next_player;
+
+      return <div key={idx} className={"field " + (currentPlayer == player.id ? "currentPlayer" : "")} style={{ left: x, top: y }}><img src={player.avatar} width="100px" /><div className="name">{player.name}</div></div>;
     });
 
 
@@ -83,15 +100,18 @@ export default class Play extends React.Component {
       return <div>Loading...</div>;
     }
 
+    const tableCardsWidth = 96 + (game.last_played_cards.length - 1) * 46;
+
     return <div>
       <h1>Play game {this.props.params.id}: {game.name}</h1>
       <div id="table">
-        {fields}
+        {playerIcons}
         {!game.started && game.max_player == Object.keys(game.players).length && <button type="button" id="startbutton" onClick={::this.startGame}>Start Game!</button>}
         {game.started && !game_player.extradata.cardDrawn && <CardDrawer cardRank={player.rank} callback={::this.cardDrawn} />}
+        <div id="cardsOnTable" style={{ width: tableCardsWidth }}>{game.last_played_cards.map((c, idx) => <Card rank={c} key={idx} />)}</div>
       <div id="oval"></div>
     </div>
-      <div id="showPlayerCards">{game.started && game_player.extradata.cardDrawn && <PlayerHand cards={game_player.cards} onPlayClick={::this.onPlayClick} buttonEnabled={game.next_player == player.id} />}</div>
+      <div id="showPlayerCards">{game.started && game_player.extradata.cardDrawn && <PlayerHand cards={game_player.cards} onPlayClick={::this.onPlayClick} buttonEnabled={game.next_player == player.id} cardsOnTable={game.last_played_cards} />}</div>
       <h3>Game data</h3>
       <pre>{JSON.stringify(game, null, 4)}</pre>
       <h3>Current Player</h3>
@@ -105,6 +125,38 @@ Play.contextTypes = {
   socket: React.PropTypes.object
 };
 
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
 
 
 // WEBPACK FOOTER //

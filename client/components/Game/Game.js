@@ -1,7 +1,7 @@
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
-import { updateGameData, updatePlayerData } from './../../actions'
+import { updateGameData, updatePlayerData, updateGamePlayerData } from './../../actions'
 
 class Game extends React.Component {
   componentWillMount() {
@@ -17,7 +17,12 @@ class Game extends React.Component {
     return React.cloneElement(this.props.children, {
       player: this.props.player,
       game: this.props.game,
-      updateGameData: this.props.updateGameData,
+      updateGameData: (data) => {
+        this.props.updateGameData(data);
+        this.context.socket.emit('game.players', (players) => {
+          this.props.updateGamePlayerData(players);
+        });
+      },
       updatePlayerExtraData: (changedData) => {
         this.context.socket.emit(
           'player.extradata',
@@ -50,6 +55,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updatePlayerData: (data) => {
       dispatch(updatePlayerData(data))
+    },
+    updateGamePlayerData: (data) => {
+      dispatch(updateGamePlayerData(data))
     }
   }
 }

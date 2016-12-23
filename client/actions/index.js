@@ -11,3 +11,15 @@ export function updateGameData(data) {
     data
   };
 }
+
+export function updateGamePlayerData(players) {
+  return {
+    type: 'GAME_PLAYERS',
+    players
+  };
+}
+
+
+
+// WEBPACK FOOTER //
+// ./client/actions/index.js

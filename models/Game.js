@@ -30,7 +30,7 @@ export default class Game {
     game.name = name;
     game.max_player = parseInt(max_player, 10);
     game.passcode = passcode;
-    game.finish = false;
+    game.finished = false;
     game.started = false;
     game.players = {};
     game.player_ranks = [];
@@ -38,6 +38,7 @@ export default class Game {
     game.round = 0;
     game.last_played_cards = [];
     game.last_played_player;
+    game.finished_players = [];
 
     game.join(creator);
 
@@ -117,31 +118,47 @@ export default class Game {
     }
     const number = cards[0];
 
-    // Remove the played cards from player
-    const start = player_cards.indexOf(number);
-    player_cards.splice(start, cards.length);
-
     // update last_played_cards
     this.last_played_cards = cards;
     this.last_played_player = player_id;
 
+    // Remove the played cards from player
+    const start = player_cards.indexOf(number);
+    player_cards.splice(start, cards.length);
+    if (player_cards.length == 0) {
+      this.players[player_id].finished = true;
+      this.finished_players.push(player_id);
+    }
+
     this.update_next_player();
+
+    this.check_game_finished();
   }
 
-  update_next_player() {
+  update_next_player(last_player = null) {
+    // set the player before last_player, so we can use the do while() neatly
+    if (last_player != null) {
+      this.next_player = this.player_ranks[((this.player_ranks.indexOf(last_player) - 1) % this.player_ranks.length)];
+    }
+
     // get current player index, and select next player index, write to next_player
-    this.next_player = this.player_ranks[((this.player_ranks.indexOf(this.next_player) + 1) % this.player_ranks.length)];
+    do {
+      this.next_player = this.player_ranks[((this.player_ranks.indexOf(this.next_player) + 1) % this.player_ranks.length)];
+    } while (this.players[this.next_player].finished);
+  }
 
-    // TODO: need to check if player still has cards
-
-    // TODO:     this.check_game_finished();
+  check_game_finished() {
+    if (this.players.filter(p => !p.finished) == 1) {
+      // game is finished
+      this.finished = true;
+    }
   }
 
   check_round_finished() {
-    if (Object.keys(this.players).every(p => this.players[p].passed)) {
+    if (Object.keys(this.players).every(p => this.players[p].passed || this.players[p].finished)) {
       // new round
       Object.keys(this.players).forEach(p => this.players[p].passed = false);
-      this.next_player = this.last_played_player;
+      this.update_next_player(this.last_played_player);
       this.last_played_cards = [];
     }
   }
@@ -180,6 +197,7 @@ export default class Game {
     }
     // Add player
     player.game_id = this.id;
-    this.players[player.id] = { rank: 0, points: 0, cards: [], extradata: {}, passed: false }
+    this.players[player.id] = { rank: 0, points: 0, cards: [], extradata: {}, passed: false, finished: false };
+    this.player_ranks.push(player.id);
   }
 }

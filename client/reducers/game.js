@@ -5,8 +5,10 @@ export default function (state = {}, action) {
       Object.keys(action.data.players).forEach(p => {
         action.data.players[p].cards = action.data.players[p].cards.slice().sort((a, b) => a - b);
       });
-      return Object.assign({}, state, action.data);
+      return Object.assign({ allplayers: [] }, state, action.data);
 
+    case 'GAME_PLAYERS':
+      return Object.assign({ allplayers: [] }, state, { allplayers: action.players });
     default:
       return state;
   }

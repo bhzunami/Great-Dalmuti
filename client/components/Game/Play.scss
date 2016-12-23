@@ -23,7 +23,20 @@ $player_height: 100px;
   width: $player_width;
   height: $player_height;
   position: absolute;
-  background: #f00;
+  background: #fff;
+}
+
+.field .name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-weight: bold;
+  width: 100px;
+  text-align: center;
+}
+
+.field.currentPlayer {
+  background: #1aea5a;
 }
 
 #startbutton {
@@ -31,4 +44,22 @@ $player_height: 100px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+#cardsOnTable {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 150px;
+  display: flex;
+  margin-left: 50px;
+}
+
+#cardsOnTable div {
+  margin-left: -50px;
+}
+
+#cardsOnTable img {
+  height: 150px;
 }

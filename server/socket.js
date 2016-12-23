@@ -92,6 +92,13 @@ module.exports.init = function (socket_io, lobby) {
       }
     });
 
+    socket.on('game.players', (answer) => {
+      const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
+      const game = lobby.games.find(g => g.id == player.game_id);
+
+      answer(Object.keys(game.players).map(p_id => lobby.players.find(p => p.id == p_id)));
+    });
+
     // Create a new player with name and avatar
     socket.on('player.create', (player_data, answer) => {
       const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
