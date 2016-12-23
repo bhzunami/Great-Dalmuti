@@ -123,12 +123,12 @@ export default class Game {
     console.log("Join game ", this.id, "with player id:", player.id);
 
     // Check if there is a spot left
-    if (this.players.length == this.max_players) {
+    if (Object.keys(this.players).length == this.max_players) {
       console.log("ERROR: Maximum User reached for this game.");
       throw "Maximum users reached";
     }
     // Check if the player was still  in game.
-    if (this.players.find(p => p.id == player.id)) {
+    if (this.players[player.id] !== undefined) {
       console.log("Dublicate user found. Can not join twice with id ", player.id);
       return;
     }
