@@ -10,7 +10,7 @@ module.exports.init = function (socket_io, lobby) {
 
   // Handle all the websocket IO calls
   //- - - - - - - - - - - - - - - - - - - -
-  // When a new connection is open we get the sessionId and create a new player if he does not exists in 
+  // When a new connection is open we get the sessionId and create a new player if he does not exists in
   // our database
   io.on('connection', function (socket) {
     sockets[socket.handshake.sessionID] = socket;
@@ -65,8 +65,11 @@ module.exports.init = function (socket_io, lobby) {
     // Start a game
     socket.on('game.start', (answer) => {
       const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
+
       try {
         const game = lobby.games.find(g => g.id == player.game_id);
+
+        console.log(game.start);
         game.start();
         answer(game);
         Socket.sendRoom(game.id, game);
@@ -109,11 +112,19 @@ module.exports.init = function (socket_io, lobby) {
       sendAll(player.name, msg);
     });
 
+    // extra data to be stored, from UI
+    socket.on('player.extradata', (data, answer) => {
+      const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
+      const game = lobby.games.find(g => g.id == player.game_id);
+      game.players[player.id].extradata = data;
+      answer(game);
+    });
+
     // When player leaves (reload or disconnect) remove player from active players
     // and if in game from game too.
+
     socket.on('disconnect', function () {
       delete sockets[socket.handshake.sessionID];
-      console.log("Player ", socket.handshake.sessionID, "has left");
       const game_id = lobby.disconnect(socket.handshake.sessionID);
       if (game_id > 0) {
         Socket.sendRoom(game_id, lobby.games.find(g => g.id == game_id));

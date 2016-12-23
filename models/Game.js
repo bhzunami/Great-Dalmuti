@@ -5,29 +5,40 @@ import { getCardsShuffled } from './Cards';
  *
  * @class Game
  */
+
+/**
+ * @constructor
+ */
 export default class Game {
+  constructor(gameData) {
+    Object.assign(this, gameData);
+  }
+
   /**
-   * @constructor
    * @param {Player} creator - The creator of the game
    * @param {Dict} - Optional parameters:
    *               - max player: how many players are allowed in this game
    *               - passcode: Protect the game with a passcode
    *               - Name of the game
    */
-  constructor(creator, {max_player = 4, passcode = "", name = ""}) {
-    this.creator = creator;
+  static createGame(creator, {max_player = 4, passcode = "", name = ""}) {
+    const game = new Game();
+
+    game.creator = creator;
     // Generate a game id with with a length of 5
-    this.id = Math.floor(Math.random() * (10 ** 5 - 10 ** 4) + 10 ** 4);
-    this.name = name;
-    this.max_player = parseInt(max_player, 10);
-    this.passcode = passcode;
-    this.finish = false;
-    this.started = false;
-    this.players = {};
-    this.player_ranks = []
-    this.next_player;
-    this.round = 0;
-    this.join(creator);
+    game.id = Math.floor(Math.random() * (10 ** 5 - 10 ** 4) + 10 ** 4);
+    game.name = name;
+    game.max_player = parseInt(max_player, 10);
+    game.passcode = passcode;
+    game.finish = false;
+    game.started = false;
+    game.players = {};
+    game.player_ranks = []
+    game.next_player;
+    game.round = 0;
+    game.join(creator);
+
+    return game;
   }
 
   // Draw a card for the start of the game
@@ -49,7 +60,7 @@ export default class Game {
 
   /**
    * Every player must have a start rank
-   * this method assigns the rank based on the card the 
+   * this method assigns the rank based on the card the
    * player choosen
    */
   assign_ranks() {
@@ -73,9 +84,9 @@ export default class Game {
    */
   deal_cards() {
     const cards = getCardsShuffled();
+    const player_keys = Object.keys(this.players);
 
     let i = 0;
-    const player_keys = Object.keys(this.players);
     while (cards.length > 0) {
       this.players[player_keys[i]].cards.push(cards.pop());
       i = (i + 1) % this.max_player;
@@ -84,7 +95,7 @@ export default class Game {
 
 
   /**
-   * When user plays a car
+   * When user plays a card
    */
   play_card(player_id, cards) {
     player_cards = this.players[player].cards
@@ -139,6 +150,6 @@ export default class Game {
     }
     // Add player
     player.game_id = this.id;
-    this.players[player.id] = { rank: 0, points: 0, cards: [] }
+    this.players[player.id] = { rank: 0, points: 0, cards: [], extradata: {} }
   }
 }

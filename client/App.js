@@ -25,27 +25,25 @@ import About from './components/About';
 const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const history = syncHistoryWithStore(browserHistory, store);
 
-
 socket.emit('player.self', (playerdata) => {
   store.dispatch(updatePlayerData(playerdata));
-});
 
-// routing & render
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history}>
-      <Route path="/" component={Layout} socket={socket}>
-        <IndexRoute path="" component={Index} />
-        <Route path="profile" component={Profile} />
-        <Route path="about" component={About} />
-        <Route path="game" component={Game.Game}>
-          <Route path="join" component={Game.Join} />
-          <Route path="new" component={Game.New} />
-          <Route path="play/:id" component={Game.Play} />
-
+  // routing & render
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router history={history}>
+        <Route path="/" component={Layout} socket={socket}>
+          <IndexRoute path="" component={Index} />
+          <Route path="about" component={About} />
+          <Route path="profile" component={Profile} />
+          <Route path="game" component={Game.Game}>
+            <Route path="join" component={Game.Join} />
+            <Route path="new" component={Game.New} />
+            <Route path="play/:id" component={Game.Play} />
+          </Route>
         </Route>
-      </Route>
-    </Router>
-  </Provider>,
-  document.getElementById('root')
-);
+      </Router>
+    </Provider>,
+    document.getElementById('root')
+  );
+});

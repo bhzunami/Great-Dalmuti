@@ -1,0 +1,49 @@
+#PlayerHand {
+  & {
+    display: flex;
+    // flex-wrap: wrap;
+    width: 100%;
+    padding-top: 50px;
+
+  }
+
+  > * {
+    margin-left: -100px;
+  }
+
+  > * img {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+  }
+
+  > *:hover:not(.disabled) img {
+    -webkit-transform: scale(1.3);
+    transform: scale(1.3);
+
+    margin-top: -100px;
+  }
+
+  .selected img {
+    -webkit-transform: scale(1.3);
+    transform: scale(1.3);
+
+    margin-top: -100px;
+  }
+
+  .disabled img {
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+  }
+
+  > *:first-child {
+    margin-left: 0;
+  }
+
+  img {
+    width: 150px;
+    display: inline-block;
+  }
+
+}

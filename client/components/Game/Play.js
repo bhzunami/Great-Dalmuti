@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import './Play.scss'
 
 import CardDrawer from './CardDrawer'
+import PlayerHand from './PlayerHand'
 
 function distributeFields() {
   var radius = 200;
@@ -47,12 +48,26 @@ export default class Play extends React.Component {
   }
 
   cardDrawn() {
-    console.log("card drawn", arguments);
+    this.props.updatePlayerExtraData({ cardDrawn: true });
+  }
+
+  cardClickedCallback(cardIdx) {
+    let cardsIdx = this.props.player.localdata.selectedCardsIdx || [];
+    const arrIdx = cardsIdx.indexOf(cardIdx);
+    if (arrIdx > -1) {
+      cardsIdx.splice(arrIdx, 1);
+    } else {
+      cardsIdx.push(cardIdx);
+    }
+    this.props.updatePlayerLocalData({ selectedCardsIdx: cardsIdx });
   }
 
   render() {
-    let {game, player} = this.props;
-    console.log(game);
+    const {game, player} = this.props;
+    if (!game.id) return null; // game did not load yet
+
+    const game_player = game.players[player.id];
+
     const width = 1000
       , height = 600
       , step = (2 * Math.PI) / game.max_player;
@@ -76,10 +91,11 @@ export default class Play extends React.Component {
       <h1>Play game {this.props.params.id}: {game.name}</h1>
       <div id="table">
         {fields}
-        {!game.started && game.max_player == game.players.length && <button type="button" id="startbutton" onClick={::this.startGame}>Start Game!</button>}
-        {game.started && !player.cardDrawn && <CardDrawer cardRank={player.rank} callback={::this.cardDrawn} />}
+        {!game.started && game.max_player == Object.keys(game.players).length && <button type="button" id="startbutton" onClick={::this.startGame}>Start Game!</button>}
+        {game.started && !game_player.extradata.cardDrawn && <CardDrawer cardRank={player.rank} callback={::this.cardDrawn} />}
       <div id="oval"></div>
     </div>
+      <div id="showPlayerCards">{game.started && game_player.extradata.cardDrawn && <PlayerHand cards={game_player.cards} selectedCardsIdx={player.localdata.selectedCardsIdx || []} cardClickedCallback={::this.cardClickedCallback}  />}</div>
       <h3>Game data</h3>
       <pre>{JSON.stringify(game, null, 4)}</pre>
       <h3>Current Player</h3>
@@ -92,3 +108,12 @@ export default class Play extends React.Component {
 Play.contextTypes = {
   socket: React.PropTypes.object
 };
+
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js
+
+
+// WEBPACK FOOTER //
+// ./client/components/Game/Play.js

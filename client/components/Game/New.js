@@ -4,11 +4,6 @@ import { connect } from 'react-redux'
 import { getFormData } from './../../helpers'
 
 export default class New extends React.Component {
-  constructor() {
-    super();
-
-    this._createGamePressed = this._createGamePressed.bind(this);
-  }
   _createGamePressed() {
     const game = getFormData('gameform');
     this.context.socket.emit('game.create', game, (gamedata, error) => {
@@ -61,12 +56,12 @@ export default class New extends React.Component {
 
           <div className="form-group">
             <div className="col-md-8 col-md-offset-3">
-              <button type="button" className="btn btn-success" onClick={this._createGamePressed}>Create Game</button>
-            </div>
+              <button type="button" className="btn btn-success" onClick={::this._createGamePressed}>Create Game</button>
+          </div>
           </div>
         </fieldset>
       </form>
-    </div>
+    </div >
   }
 }
 

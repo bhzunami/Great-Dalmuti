@@ -1,0 +1,3 @@
+serverside todo:
+- data persistence
+- socket should listen on player object changes, then push changes to client

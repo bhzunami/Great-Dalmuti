@@ -5,17 +5,17 @@ import Player from './Player';
  * The Lobby controlls all games
  * and stores the games in a json file called data.json
  * If this file exists the stored data are loaded
- * 
+ *
    * @constructor
-   * @param {lobby} A stored game lobby 
+   * @param {lobby} A stored game lobby
    */
 export default class Lobby {
   constructor(lobby) {
-    if (lobby === undefined) {
+    if (lobby === undefined || lobby.games === undefined) {
       this.games = [];
       this.players = [];
     } else {
-      this.games = lobby.games;
+      this.games = lobby.games.map(g => new Game(g));
       this.players = lobby.players;
     }
   }
@@ -33,7 +33,7 @@ export default class Lobby {
       throw "Player with id " + creator_id + " was not found on server";
     }
     // always create an 5 digits long game id
-    const game = new Game(creator, data);
+    const game = Game.createGame(creator, data);
     this.games.push(game);
     creator.game_id = game.id;
     return game;
@@ -44,7 +44,7 @@ export default class Lobby {
    * @param{id} The id of the player
    * Checks if the player already exists in our database (reload) and then
    * add it to our players
-   * 
+   *
    */
   connect(id) {
     let player = this.players.find(p => p.id == id);
@@ -60,7 +60,7 @@ export default class Lobby {
   /**
    * If player left (reload or close tab) we remove the player
    * from our active player list
-   * 
+   *
    * @param{id} The player id
    */
   disconnect(id) {
