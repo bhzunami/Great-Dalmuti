@@ -79,6 +79,18 @@ module.exports.init = function (socket_io, lobby) {
       }
     });
 
+    socket.on('game.new_game', (answer) => {
+      const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
+      try {
+        const game = lobby.games.find(g => g.id == player.game_id);
+        game.next_game();
+        Socket.sendRoom(game.id, game);
+      } catch (error) {
+        answer(null, error);
+        throw error;
+      }
+    });
+
     // Play a card
     socket.on('game.card_played', (cards, answer) => {
       const player = lobby.players.find(p => p.id == socket.handshake.sessionID);

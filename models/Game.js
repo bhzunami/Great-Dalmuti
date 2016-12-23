@@ -166,7 +166,19 @@ export default class Game {
   /**
    *  Start the next round
    */
-  next_round() {
+  next_game() {
+    this.player_ranks = [];
+    this.round += 1;
+    for (const i = 0; i < this.finished_players.length; i++) {
+      this.players[this.finished_players[i]].rank = i;
+      this.player_ranks.push(this.finished_players[i]);
+    }
+    this.game.next_player = this.finished_players[0];
+    this.finished_players = []
+    game.last_played_cards = [];
+    game.last_played_player = null;
+    game.finished = false;
+    game.started = true;
     this.deal_cards();
   }
 
@@ -200,4 +212,6 @@ export default class Game {
     this.players[player.id] = { rank: 0, points: 0, cards: [], extradata: {}, passed: false, finished: false };
     this.player_ranks.push(player.id);
   }
+
+
 }
