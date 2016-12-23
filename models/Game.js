@@ -116,11 +116,6 @@ export default class Game {
       throw "More cards are played";
     }
     const number = cards[0];
-    // get all cards with this number ToDO Joker Check
-    // const found = player_cards.filter(card => card == number)
-    // if (found.length < cards.length) {
-    //   throw "You do not have this num of cards";
-    // }
 
     // Remove the played cards from player
     const start = player_cards.indexOf(number);

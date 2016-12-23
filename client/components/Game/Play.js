@@ -91,7 +91,7 @@ export default class Play extends React.Component {
         {game.started && !game_player.extradata.cardDrawn && <CardDrawer cardRank={player.rank} callback={::this.cardDrawn} />}
       <div id="oval"></div>
     </div>
-      <div id="showPlayerCards">{game.started && game_player.extradata.cardDrawn && <PlayerHand cards={game_player.cards} onPlayClick={::this.onPlayClick}  />}</div>
+      <div id="showPlayerCards">{game.started && game_player.extradata.cardDrawn && <PlayerHand cards={game_player.cards} onPlayClick={::this.onPlayClick} buttonEnabled={game.next_player == player.id} />}</div>
       <h3>Game data</h3>
       <pre>{JSON.stringify(game, null, 4)}</pre>
       <h3>Current Player</h3>

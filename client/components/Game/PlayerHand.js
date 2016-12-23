@@ -34,7 +34,7 @@ export default class PlayerHand extends React.Component {
   }
 
   render() {
-    const {cards, onPlayClick} = this.props;
+    const {cards, onPlayClick, buttonEnabled} = this.props;
     const selectedCardsIdx = this.state.selectedCardsIdx;
 
     const selection = selectedCardsIdx.length > 0;
@@ -53,7 +53,7 @@ export default class PlayerHand extends React.Component {
     return <div><div id="PlayerHand">
       {cards.map((card, idx) => <div key={idx} className={cx({ "selected": (selectedCardsIdx.indexOf(idx) > -1), "disabled": selection && card != currentCardVal })}><Card rank={card} onClick={::this.cardClick(idx)} /></div>)}
     </div>
-      <button onClick={playClick}>Passen/Karten spielen</button>
+      {buttonEnabled && <button onClick={playClick}>Passen/Karten spielen</button>}
     </div>;
   }
 };
