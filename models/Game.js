@@ -113,7 +113,7 @@ export default class Game {
    */
   removePlayer(player) {
     player.game_id = null;
-    this.players = this.players.filter(p => p.id != player.id);
+    delete this.players[player.id]
   }
 
   /**
@@ -134,6 +134,6 @@ export default class Game {
     }
     // Add player
     player.game_id = this.id;
-    this.players[player.id] = { ranks: 0, cards: [] }
+    this.players[player.id] = { rank: 0, points: 0, cards: [] }
   }
 }
