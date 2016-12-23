@@ -148,7 +148,9 @@ export default class Game {
   }
 
   check_game_finished() {
-    if (this.players.filter(p => !p.finished) == 1) {
+    const unfinishedPlayers = Object.keys(this.players).filter(pid => !this.players[pid].finished);
+    if (unfinishedPlayers.length == 1) {
+      this.finished_players.push(unfinishedPlayers[0]);
       // game is finished
       this.finished = true;
     }
@@ -169,16 +171,16 @@ export default class Game {
   next_game() {
     this.player_ranks = [];
     this.round += 1;
-    for (const i = 0; i < this.finished_players.length; i++) {
+    for (let i = 0; i < this.finished_players.length; i++) {
       this.players[this.finished_players[i]].rank = i;
       this.player_ranks.push(this.finished_players[i]);
     }
-    this.game.next_player = this.finished_players[0];
+    this.next_player = this.finished_players[0];
     this.finished_players = []
-    game.last_played_cards = [];
-    game.last_played_player = null;
-    game.finished = false;
-    game.started = true;
+    this.last_played_cards = [];
+    this.last_played_player = null;
+    this.finished = false;
+    this.started = true;
     this.deal_cards();
   }
 

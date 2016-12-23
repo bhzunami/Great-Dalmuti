@@ -5,6 +5,7 @@ import './Play.scss'
 
 import CardDrawer from './CardDrawer'
 import PlayerHand from './PlayerHand'
+import FinishedGame from './FinishedGame'
 import Card from './Card'
 
 function errorCallback(_, error) {
@@ -62,6 +63,10 @@ export default class Play extends React.Component {
     this.context.socket.emit('game.card_played', cards, errorCallback);
   }
 
+  nextRoundClicked() {
+    this.context.socket.emit('game.new_game', errorCallback);
+  }
+
   render() {
     const {game, player} = this.props;
     if (!game.id) return null; // game did not load yet
@@ -69,7 +74,7 @@ export default class Play extends React.Component {
     const game_player = game.players[player.id];
 
 
-    // draw table
+    // draw player icons
     const width = 1000
       , height = 600
       , step = (2 * Math.PI) / game.max_player;
@@ -92,8 +97,13 @@ export default class Play extends React.Component {
       const player = game.allplayers.find(p => p.id == game.player_ranks[idxOffset]);
       const currentPlayer = game.next_player;
 
-      return <div key={idx} className={"field " + (currentPlayer == player.id ? "currentPlayer" : "")} style={{ left: x, top: y }}><img src={player.avatar} width="100px" /><div className="name">{player.name}</div></div>;
+      return <div key={idx} className={"field " + (currentPlayer == player.id ? "currentPlayer" : "")} style={{ left: x, top: y }}>
+        <img src={player.avatar} width="100px" />
+        <div className="name">{player.name}</div>
+        {game.players[player.id].finished && <span className="glyphicon glyphicon-ok"></span>}
+      </div>;
     });
+    // end draw player icons
 
 
     if (!player.id || !game.name) {
@@ -106,6 +116,7 @@ export default class Play extends React.Component {
       <h1>Play game {this.props.params.id}: {game.name}</h1>
       <div id="table">
         {playerIcons}
+        {game.finished && <FinishedGame game={game} nextRoundClicked={::this.nextRoundClicked} />}
         {!game.started && game.max_player == Object.keys(game.players).length && <button type="button" id="startbutton" onClick={::this.startGame}>Start Game!</button>}
         {game.started && !game_player.extradata.cardDrawn && <CardDrawer cardRank={player.rank} callback={::this.cardDrawn} />}
         <div id="cardsOnTable" style={{ width: tableCardsWidth }}>{game.last_played_cards.map((c, idx) => <Card rank={c} key={idx} />)}</div>

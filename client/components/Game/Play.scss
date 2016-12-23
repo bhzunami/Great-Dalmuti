@@ -39,6 +39,12 @@ $player_height: 100px;
   background: #1aea5a;
 }
 
+.field span {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
 #startbutton {
   position: absolute;
   top: 50%;

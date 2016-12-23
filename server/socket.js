@@ -96,8 +96,11 @@ module.exports.init = function (socket_io, lobby) {
       const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
       try {
         const game = lobby.games.find(g => g.id == player.game_id);
+        console.log("before play_card");
         game.play_card(player.id, cards);
+        console.log("after play_card");
         Socket.sendRoom(game.id, game);
+        console.log("after send room");
       } catch (error) {
         answer(null, error);
         throw error;

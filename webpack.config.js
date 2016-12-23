@@ -5,6 +5,7 @@ module.exports = {
   entry: './client/App.js',
   output: {
     path: './public/bundled',
+    publicPath: '/bundled/',
     filename: 'bundle.js'
   },
   devtool: 'source-map',
