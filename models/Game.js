@@ -24,6 +24,9 @@ export default class Game {
     this.finish = false;
     this.started = false;
     this.players = {};
+    this.player_ranks = []
+    this.next_player;
+    this.round = 0;
     this.join(creator);
   }
 
@@ -36,7 +39,7 @@ export default class Game {
   // starts a new game
   start() {
     // check if there are enough player to play game
-    if (this.players.length < this.max_player) {
+    if (Object.keys(this.players).length < this.max_player) {
       throw "There are not enough player";
     }
     this.assign_ranks();
@@ -52,7 +55,6 @@ export default class Game {
   assign_ranks() {
     const assigned_ranks = [];
 
-
     Object.keys(this.players).forEach(p_key => {
       let rank = 0;
       do {
@@ -62,6 +64,8 @@ export default class Game {
       assigned_ranks.push(rank);
       this.players[p_key].rank = rank;
     });
+    this.player_ranks = Object.keys(this.players).sort((a, b) => this.players[a].rank - this.players[b].rank);
+    this.next_player = this.player_ranks[0];
   }
 
   /**
@@ -71,7 +75,7 @@ export default class Game {
     const cards = getCardsShuffled();
 
     let i = 0;
-    player_keys = Object.keys(this.players)
+    const player_keys = Object.keys(this.players);
     while (cards.length > 0) {
       this.players[player_keys[i]].cards.push(cards.pop());
       i = (i + 1) % this.max_player;
@@ -84,6 +88,8 @@ export default class Game {
    */
   play_card(player_id, cards) {
     player_cards = this.players[player].cards
+    this.player_cards.sort((a, b) => a - b);
+
     if (player_cards.length < cards.length) {
       throw "More cards are played";
     }
@@ -93,7 +99,6 @@ export default class Game {
     if (found.length < cards.length) {
       throw "You do not have this num of cards";
     }
-    this.player_cards.sort((a, b) => a - b);
     // Remove the played cards from player
     start = player_cards.indexOf(number);
     this.player_cards.splice(start, start + cards.length);
@@ -129,7 +134,7 @@ export default class Game {
     }
     // Check if the player was still  in game.
     if (this.players[player.id] !== undefined) {
-      console.log("Dublicate user found. Can not join twice with id ", player.id);
+      console.log("Duplicate user found. Rejoin ", player.id);
       return;
     }
     // Add player
