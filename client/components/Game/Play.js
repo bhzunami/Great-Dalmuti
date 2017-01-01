@@ -46,8 +46,8 @@ export default class Play extends React.Component {
     // listen on game updates
     this.context.socket.on(this.props.params.id, this.props.updateGameData);
 
-    // join game, get data
-    this.context.socket.emit('game.join', this.props.params.id, () => { });
+    // get data
+    //this.context.socket.emit('game.join', this.props.params.id, () => { });
     this.context.socket.emit('game.get', this.props.params.id, this.props.updateGameData);
   }
 

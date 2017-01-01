@@ -38,26 +38,28 @@ module.exports.init = function (socket_io, lobby) {
     });
 
     // Join to a game and room
-    socket.on('game.join', (game_id, answer) => {
+    socket.on('game.join', (data, answer) => {
+      console.log("Join ", data);
       const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
       if (player === undefined) {
         console.log("ERROR: Player with ", socket.handshake.sessionID, "not found");
         answer(null, "Player not found");
         return;
       }
-      const game = lobby.games.find(g => g.id == game_id);
+      const game = lobby.games.find(g => g.id == data.game_id);
       if (game === undefined) {
-        console.log("ERROR: Game with ", game_id, "not found");
+        console.log("ERROR: Game with ", data.game_id, "not found");
         answer(null, "Game not found");
         return;
       }
       try {
-        game.join(player);
-        console.log("Now there are ", game.players.length, " Player in the game");
+        game.join(player, data.password);
+        console.log("Now there are ", Object.keys(game.players).length, " Player in the game");
         socket.join(game.id);
         answer(game);
         Socket.sendRoom(game.id, game);
       } catch (error) {
+        console.log("Error in Join", error);
         answer(null, error);
       }
     });

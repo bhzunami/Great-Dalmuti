@@ -5,17 +5,33 @@ export default class Join extends React.Component {
   constructor() {
     super();
     this.state = {
-      gameid: null
+      gameid: null,
+      password: null
     };
   }
 
   handleChange(event) {
-    this.setState({ gameid: event.target.value });
+    let key = event.target.id
+    console.log(key);
+    if (key == 'gameid') {
+      this.setState({ gameid: event.target.value });
+    } else {
+      this.setState({ password: event.target.value });
+    }
   }
 
   onSubmit(e) {
     e.preventDefault();
-    browserHistory.push('/game/play/' + this.state.gameid);
+    console.log(this.state.gameid + '?' + this.state.password);
+    this.context.socket.emit('game.join', { game_id: this.state.gameid, password: this.state.password }, (_, error) => {
+      if (error) {
+        alert(error);
+        console.log(error);
+        return;
+      }
+      browserHistory.push('/game/play/' + this.state.gameid);
+
+    });
   }
 
   render() {
@@ -28,6 +44,13 @@ export default class Join extends React.Component {
           <label className="col-md-4 control-label" htmlFor="gameid">Game ID</label>
           <div className="col-md-4">
             <input id="gameid" name="gameid" type="text" value={this.state.value} onChange={::this.handleChange} placeholder="12345" className="form-control input-md" required="" />
+
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="col-md-4 control-label" htmlFor="password">Password</label>
+          <div className="col-md-4">
+            <input id="password" name="password" type="password" value={this.state.value} onChange={::this.handleChange} placeholder="Empty if no password" className="form-control input-md" required="" />
 
             </div>
         </div>
@@ -44,3 +67,7 @@ export default class Join extends React.Component {
     </div >
   }
 }
+
+Join.contextTypes = {
+  socket: React.PropTypes.object
+};

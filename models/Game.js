@@ -2,8 +2,10 @@ import { getCardsShuffled } from './Cards';
 
 /**
  * Class representing a Game.
- *
+ * 
  * @class Game
+ * A game holds all players with their cards and ranks
+ * It also manage the joining and leaving of a game
  */
 
 /**
@@ -147,6 +149,8 @@ export default class Game {
     } while (this.players[this.next_player].finished);
   }
 
+  // Check if the game is finished
+  // A game is finished if only one player have cards
   check_game_finished() {
     const unfinishedPlayers = Object.keys(this.players).filter(pid => !this.players[pid].finished);
     if (unfinishedPlayers.length == 1) {
@@ -156,6 +160,9 @@ export default class Game {
     }
   }
 
+  // Check if a round is finished
+  // A round is finished when all players can not add cards or
+  // if every player passed
   check_round_finished() {
     if (Object.keys(this.players).every(p => this.players[p].passed || this.players[p].finished)) {
       // new round
@@ -167,6 +174,9 @@ export default class Game {
 
   /**
    *  Start the next round
+   * For a next round we have to set the rank of the players
+   * clear finished players and set the game as started
+   * then shuffle a new deck
    */
   next_game() {
     this.player_ranks = [];
@@ -196,9 +206,18 @@ export default class Game {
   /**
    * Join a new player to the game
    */
-  join(player) {
+  join(player, passcode = "") {
     console.log("Join game ", this.id, "with player id:", player.id);
 
+    if (this.passcode != "" && this.creator.id != player.id) {
+      console.log("Send ", passcode);
+      console.log("ORIGINAL ", this.passcode);
+      if (passcode != this.passcode) {
+        console.log("WRONG PASSWORD");
+        throw "Wrong passcode";
+      }
+    }
+    console.log("Passcheck ok");
     // Check if there is a spot left
     if (Object.keys(this.players).length == this.max_players) {
       console.log("ERROR: Maximum User reached for this game.");

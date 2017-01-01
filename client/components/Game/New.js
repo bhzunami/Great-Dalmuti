@@ -11,10 +11,11 @@ export default class New extends React.Component {
         alert("an error happened :( " + JSON.stringify(error));
         return;
       }
-
       this.props.updateGameData(gamedata);
-
+      // JOIN PLAYER TO THE GAME
+      this.context.socket.emit('game.join', { game_id: gamedata.id }, () => { });
       browserHistory.push('/game/play/' + gamedata.id);
+
     });
   }
   render() {
