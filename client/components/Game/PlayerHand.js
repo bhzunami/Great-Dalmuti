@@ -70,7 +70,7 @@ export default class PlayerHand extends React.Component {
       this.setState({ selectedCardsIdx: [] });
     };
 
-    const buttonName = selectedCardsIdx.length == 0 ? "Passen" : "Karten spielen";
+    const buttonName = selectedCardsIdx.length == 0 ? "Pass" : "Play card(s)";
     const buttonCheck = buttonEnabled && (selectedCardsIdx.length == cardsOnTable.length || selectedCardsIdx.length == 0 || cardsOnTable.length == 0);
 
     return <div><div id="PlayerHand">
