@@ -2,15 +2,44 @@ import { CARD_SET, RANKS, CARD_URLS } from './../../../models/Cards'
 
 import Card from './Card'
 
+export default class CardDrawer extends React.Component {
 
-export default function CardDrawer({cardRank, callback}) {
-  function onClick() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      drawStage: 0
+    }
+  }
+
+  clickedCard() {
     // todo: transition animation
-    callback();
-  };
+    //callback();
+    this.setState({ drawStage: 1 });
+  }
 
-  const cards = [].fill.call({ length: CARD_SET.length }, <Card rank={cardRank} onClick={onClick} />);
+  render() {
+    const cardRank = this.props.cardRank;
 
-  // return <div id="carddrawer" style={{ position: "absolute", top: "50%", left: "50%" }}>{cards[0]}</div>;
-  return <div id="carddrawer"><button onClick={onClick}>This is a random card you can click on!</button></div>
-};
+    if (this.state.drawStage == 0) {
+
+      return <div id="cardDrawer">
+        <h2>Please pick a card</h2>
+        <div className="cards">
+          <Card rank={cardRank} onClick={::this.clickedCard} hidden={true} />
+          <Card rank={cardRank} onClick={::this.clickedCard} hidden={true} />
+          <Card rank={cardRank} onClick={::this.clickedCard} hidden={true} />
+          <Card rank={cardRank} onClick={::this.clickedCard} hidden={true} />
+          <Card rank={cardRank} onClick={::this.clickedCard} hidden={true} />
+          <Card rank={cardRank} onClick={::this.clickedCard} hidden={true} />
+        </div>
+      </div>
+    } else {
+      return <div id="cardDrawer">
+        <div className="singleCard">
+          <Card rank={cardRank} />
+        </div>
+        <div><button onClick={::this.props.callback}>OK</button></div>
+      </div>
+    }
+  }
+}

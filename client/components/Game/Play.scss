@@ -2,6 +2,10 @@ $height: 600px;
 $width: 1000px;
 
 #table {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+
   width: $width;
   height: $height;
   position: relative;
@@ -10,39 +14,94 @@ $width: 1000px;
 }
 
 #oval {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   width: $width;
   height: $height;
-  background: #194D1E;
+  background: darken(brown, 20%);
   border-radius: 150%;
+
+  #oval2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: #194D1E;
+    width: $width * .95;
+    height: $height * .95;
+    border-radius: 150%;
+  }
 }
 
-$player_width: 100px;
-$player_height: 100px;
+#playerIcons {
+  $player_width: 100px;
+  $player_height: 100px;
 
-.field {
-  width: $player_width;
-  height: $player_height;
-  position: absolute;
-  background: #fff;
-}
+  .field {
+    width: $player_width;
+    height: $player_height;
+    position: absolute;
+    background: #fff;
+  }
 
-.field .name {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  font-weight: bold;
-  width: 100px;
-  text-align: center;
-}
+  .field .name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-weight: bold;
+    width: 100px;
+    text-align: center;
+  }
 
-.field.currentPlayer {
-  background: #1aea5a;
-}
+  .field.currentPlayer {
+    background: #1aea5a;
+  }
 
-.field span {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  .field::before {
+    content: "";
+    position: absolute;
+    height: 100px;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .greatDalmuti::before {
+    background-image: url("/static/crown.png");
+    width: 80px;
+    top: -62px;
+  }
+
+  .smallDalmuti::before {
+    background-image: url("/static/crown.png");
+    width: 50px;
+    top: -39px;
+  }
+
+  .greatButler::before {
+    background-image: url("/static/bowtie.png");
+    width: 50px;
+    top: 55px;
+  }
+
+  .smallButler::before {
+    background-image: url("/static/bowtie.png");
+    width: 30px;
+    top: 55px;
+  }
+
+  .field span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
 }
 
 #startbutton {
@@ -60,12 +119,69 @@ $player_height: 100px;
   height: 150px;
   display: flex;
   margin-left: 50px;
+
+  div {
+    margin-left: -50px;
+  }
+
+  img {
+    height: 150px;
+  }
 }
 
-#cardsOnTable div {
-  margin-left: -50px;
+#gameFinished {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 20px;
+
+  #nextRound {
+    float: right;
+  }
 }
 
-#cardsOnTable img {
-  height: 150px;
+#cardDrawer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 220px;
+
+  h2 {
+    color: white;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  div.ok {
+    text-align: center;
+  }
+
+  img {
+    height: 150px;
+  }
+
+  .cards {
+    position: absolute;
+    top: 50px;
+    height: 150px;
+
+    display: flex;
+
+    div {
+      margin-left: -50px;
+    }
+  }
+
+  .singleCard {
+    position: absolute;
+    top: 50px;
+    height: 150px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
 }

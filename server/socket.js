@@ -55,13 +55,21 @@ module.exports.init = function (socket_io, lobby) {
       try {
         game.join(player, data.password);
         console.log("Now there are ", Object.keys(game.players).length, " Player in the game");
-        socket.join(game.id);
+
         answer(game);
         Socket.sendRoom(game.id, game);
       } catch (error) {
         console.log("Error in Join", error);
         answer(null, error);
       }
+    });
+
+    socket.on("game.initsockets", () => {
+      const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
+      const game = lobby.games.find(g => g.id == player.game_id);
+
+      socket.join(game.id);
+      socket.join(game.id + "_chat");
     });
 
     // Start a game
@@ -133,7 +141,10 @@ module.exports.init = function (socket_io, lobby) {
     // Chat function to chat in a game
     socket.on('chat', (msg) => {
       const player = lobby.players.find(p => p.id == socket.handshake.sessionID);
-      sendAll(player.name, msg);
+      const game = lobby.games.find(g => g.id == player.game_id);
+      console.log("new message", msg);
+      Socket.sendRoom(game.id + "_chat", { id: player.id, name: player.name, msg });
+      console.log("game:", game.id);
     });
 
     // extra data to be stored, from UI

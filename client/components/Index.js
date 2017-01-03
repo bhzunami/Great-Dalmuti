@@ -14,9 +14,7 @@ export default class Index extends React.Component {
   }
 
   componentDidMount() {
-
     this.context.socket.emit('lobby.info', this.props.params.id, (data) => {
-      console.log(data);
       this.setState({
         games: data.games,
         active_players: data.active_players,

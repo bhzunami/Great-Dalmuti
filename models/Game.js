@@ -2,7 +2,7 @@ import { getCardsShuffled } from './Cards';
 
 /**
  * Class representing a Game.
- * 
+ *
  * @class Game
  * A game holds all players with their cards and ranks
  * It also manage the joining and leaving of a game
@@ -124,9 +124,13 @@ export default class Game {
     this.last_played_cards = cards;
     this.last_played_player = player_id;
 
-    // Remove the played cards from player
-    const start = player_cards.indexOf(number);
-    player_cards.splice(start, cards.length);
+    // Remove the played cards from player (loop needed because there may be a joker in there)
+    const cardsCopy = cards.slice();
+    while (cardsCopy.length > 0) {
+      const cardIdx = player_cards.indexOf(cardsCopy.pop());
+      player_cards.splice(cardIdx, 1);
+    }
+
     if (player_cards.length == 0) {
       this.players[player_id].finished = true;
       this.finished_players.push(player_id);
@@ -181,10 +185,11 @@ export default class Game {
   next_game() {
     this.player_ranks = [];
     this.round += 1;
+
     for (let i = 0; i < this.finished_players.length; i++) {
-      this.players[this.finished_players[i]].rank = i;
-      this.player_ranks.push(this.finished_players[i]);
+      this.initPlayer(this.finished_players[i], i);
     }
+
     this.next_player = this.finished_players[0];
     this.finished_players = []
     this.last_played_cards = [];
@@ -228,11 +233,13 @@ export default class Game {
       console.log("Duplicate user found. Rejoin ", player.id);
       return;
     }
-    // Add player
+
     player.game_id = this.id;
-    this.players[player.id] = { rank: 0, points: 0, cards: [], extradata: {}, passed: false, finished: false };
-    this.player_ranks.push(player.id);
+    this.initPlayer(player.id);
   }
 
-
+  initPlayer(player_id, rank = 0) {
+    this.players[player_id] = { rank, points: 0, cards: [], extradata: { cardDrawn: this.round > 0 }, passed: false, finished: false };
+    this.player_ranks.push(player_id);
+  }
 }

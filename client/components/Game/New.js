@@ -50,7 +50,7 @@ export default class New extends React.Component {
           <div className="form-group">
             <label className="col-md-3 control-label" htmlFor="passcode">Passcode</label>
             <div className="col-md-8">
-              <input id="passcode" name="passcode" type="text" placeholder="Optional; restrict who can enter" className="form-control input-md" />
+              <input id="passcode" name="passcode" type="password" placeholder="Optional; restrict who can enter" className="form-control input-md" />
 
             </div>
           </div>

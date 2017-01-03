@@ -12,7 +12,7 @@ export default class Join extends React.Component {
 
   handleChange(event) {
     let key = event.target.id
-    console.log(key);
+
     if (key == 'gameid') {
       this.setState({ gameid: event.target.value });
     } else {
@@ -22,7 +22,6 @@ export default class Join extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-    console.log(this.state.gameid + '?' + this.state.password);
     this.context.socket.emit('game.join', { game_id: this.state.gameid, password: this.state.password }, (_, error) => {
       if (error) {
         alert(error);
@@ -36,20 +35,20 @@ export default class Join extends React.Component {
 
   render() {
     return <div className="col-md-6 col-md-offset-3">
-
+      <h1>Join Game</h1>
       <form className="form-horizontal" onSubmit={::this.onSubmit}>
         <fieldset>
 
         <div className="form-group">
           <label className="col-md-4 control-label" htmlFor="gameid">Game ID</label>
-          <div className="col-md-4">
+          <div className="col-md-5">
             <input id="gameid" name="gameid" type="text" value={this.state.value} onChange={::this.handleChange} placeholder="12345" className="form-control input-md" required="" />
 
           </div>
         </div>
         <div className="form-group">
           <label className="col-md-4 control-label" htmlFor="password">Password</label>
-          <div className="col-md-4">
+          <div className="col-md-5">
             <input id="password" name="password" type="password" value={this.state.value} onChange={::this.handleChange} placeholder="Empty if no password" className="form-control input-md" required="" />
 
             </div>
