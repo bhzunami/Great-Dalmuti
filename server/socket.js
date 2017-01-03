@@ -144,9 +144,19 @@ module.exports.init = function (socket_io, lobby) {
       answer(game);
     });
 
+
+    socket.on('lobby.info', (data, answer) => {
+      console.log("GET DATA from lobby");
+      const active_players = lobby.players.filter(p => p.active).length;
+      answer({
+        games: lobby.games.length,
+        active_players: active_players,
+        inactive_players: lobby.players.length - active_players
+      });
+    });
+
     // When player leaves (reload or disconnect) remove player from active players
     // and if in game from game too.
-
     socket.on('disconnect', function () {
       delete sockets[socket.handshake.sessionID];
       const game_id = lobby.disconnect(socket.handshake.sessionID);
