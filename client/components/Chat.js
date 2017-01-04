@@ -3,30 +3,38 @@ import { connect } from 'react-redux'
 
 import './Chat.scss'
 
-// http://www.codeply.com/go/bp/6mdOs5FvKU
+// displays the chat box on the bottom right in a game.
+
+// original html & css source code from here: http://packetcode.com/apps/facebook-like-chat/
+
 export default class Chat extends React.Component {
     constructor(props) {
         super(props);
+        // init state
         this.state = {
             messages: [],
         };
     }
 
     componentDidMount() {
+        // listen on new chat messages in the game
         this.context.socket.on(this.props.game_id + "_chat", this.chatMessageRecieved.bind(this));
     }
 
     chatMessageRecieved(msg) {
+        // update state
         this.setState({ messages: [...this.state.messages, msg] });
     }
 
     closeChat() {
+        // open or close chat
         $('.msg_wrap').slideToggle('slow');
     }
 
     sendMessage(event) {
         if (event.key !== 'Enter') return;
-        if (event.target.value.length === 0) return;
+        if (event.target.value.length === 1) return;
+        // send a message when pressing enter
 
         this.context.socket.emit("chat", event.target.value);
 
@@ -34,6 +42,7 @@ export default class Chat extends React.Component {
     }
 
     componentDidUpdate() {
+        // automatically scroll to bottom when a new chat message is coming
         const objDiv = $("#chat .msg_body")[0];
         objDiv.scrollTop = objDiv.scrollHeight;
     }
@@ -41,10 +50,11 @@ export default class Chat extends React.Component {
     render() {
         const player_id = this.props.player_id;
 
+        // process messages, look if they are from the current player or from someone else
         const messages = this.state.messages.map(({ id, name, msg }, idx) => <div className={player_id == id ? "msg_own" : "msg_other"} key={idx}><b>{name}</b> <br />{msg}</div >);
 
+        // display the chat box
         return <div id="chat">
-
             <div className="msg_box">
                 <div className="msg_head" onClick={::this.closeChat}>Game Chat
                 <div className="close">&mdash;</div>
@@ -57,40 +67,11 @@ export default class Chat extends React.Component {
                 <div className="msg_footer"><textarea className="msg_input" rows="4" onKeyUp={::this.sendMessage}></textarea></div>
         </div>
         </div >
-
         </div >
     }
 }
 
-
+// we use web sockets here
 Chat.contextTypes = {
     socket: React.PropTypes.object
 };
-
-
-/*
-
-            <div className="panel panel-primary">
-                <div className="panel-heading">
-                    Chat
-        </div>
-            </div>
-            <div className="panel-body">
-                <ul className="chat">
-                    <li className="left clearfix">
-                        <span className="chat-img pull-left">
-                            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" className="img-circle" />
-                        </span>
-                        <div className="chat-body clearfix">
-                            <div className="header">
-                                <strong className="primary-font">Jack Sparrow</strong> <small className="pull-right text-muted">
-                                    <span className="glyphicon glyphicon-time"></span>12 mins ago</small>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                    dolor, quis ullamcorper ligula sodales.
-                                </p>
-                        </div>
-                    </li>
-                </ul>
-            </div>*/

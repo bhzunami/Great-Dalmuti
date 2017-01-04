@@ -1,4 +1,4 @@
-
+// shows the ranking and a "next round" button
 export default function FinishedGame({game, nextRoundClicked}) {
   if (game.allplayers.length == 0) return null;
 

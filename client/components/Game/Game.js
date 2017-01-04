@@ -6,6 +6,7 @@ import { updateGameData, updatePlayerData, updateGamePlayerData } from './../../
 class Game extends React.Component {
   componentWillMount() {
     if (!this.props.player.name) {
+      // redirect to lobby if no name was set
       browserHistory.push("/Profile");
     }
   }
@@ -14,6 +15,8 @@ class Game extends React.Component {
     if (!this.props.player.name) {
       return <div>Loading...</div>;
     }
+
+    // this page wraps the other pages, it adds some variables to the pages and functions to update the redux store
     return React.cloneElement(this.props.children, {
       player: this.props.player,
       game: this.props.game,
@@ -36,18 +39,18 @@ class Game extends React.Component {
     });
   }
 }
-
+// we use web sockets in this page
 Game.contextTypes = {
   socket: React.PropTypes.object
 };
-
+// use player and game from the store
 const mapStateToProps = (state) => {
   return {
     player: state.player,
     game: state.game,
   }
 }
-
+// we might update those parts of the store
 const mapDispatchToProps = (dispatch) => {
   return {
     updateGameData: (data) => {
@@ -61,7 +64,7 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
-
+// export object
 export default connect(
   mapStateToProps,
   mapDispatchToProps

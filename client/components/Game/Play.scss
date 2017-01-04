@@ -1,3 +1,12 @@
+// mixin to completely center an object
+@mixin centered() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Size and positioning of the table and player icons
 $height: 600px;
 $width: 1000px;
 
@@ -14,10 +23,7 @@ $width: 1000px;
 }
 
 #oval {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  @include centered();
 
   width: $width;
   height: $height;
@@ -25,10 +31,7 @@ $width: 1000px;
   border-radius: 150%;
 
   #oval2 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    @include centered();
 
     background: #194D1E;
     width: $width * .95;
@@ -46,6 +49,12 @@ $width: 1000px;
     height: $player_height;
     position: absolute;
     background: #fff;
+  }
+
+  .field span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 
   .field .name {
@@ -72,6 +81,7 @@ $width: 1000px;
     background-repeat: no-repeat;
   }
 
+  // display role icons
   .greatDalmuti::before {
     background-image: url("/static/crown.png");
     width: 80px;
@@ -95,27 +105,15 @@ $width: 1000px;
     width: 30px;
     top: 55px;
   }
-
-  .field span {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-
 }
 
 #startbutton {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  @include centered();
 }
 
 #cardsOnTable {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  @include centered();
+
   height: 150px;
   display: flex;
   margin-left: 50px;
@@ -130,10 +128,8 @@ $width: 1000px;
 }
 
 #gameFinished {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+ @include centered();
+
   background-color: rgba(255, 255, 255, 0.9);
   padding: 30px;
   border-radius: 20px;
@@ -144,10 +140,8 @@ $width: 1000px;
 }
 
 #cardDrawer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  @include centered();
+
   height: 220px;
 
   h2 {

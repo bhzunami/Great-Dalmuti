@@ -10,25 +10,30 @@ import 'bootstrap-loader';
 // CSS files
 import './App.scss';
 
-// more stuff
+// Redux stuff
 import reducers from './reducers'
 import { updatePlayerData } from './actions'
+// web socket
 import socket from './socket'
 
-// Components
+// React components
 import Index from './components/Index';
 import Profile from './components/Profile';
 import Layout from './components/Layout';
 import Game from './components/Game';
 import About from './components/About';
 
+// create redux store
 const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+// put browser history in redux store (and vice versa)
 const history = syncHistoryWithStore(browserHistory, store);
 
+// get player data from server
 socket.emit('player.self', (playerdata) => {
+  // put in store
   store.dispatch(updatePlayerData(playerdata));
 
-  // routing & render
+  // render page & routing
   ReactDOM.render(
     <Provider store={store}>
       <Router history={history}>

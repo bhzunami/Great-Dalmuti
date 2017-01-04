@@ -1,6 +1,7 @@
 import { Router, Route, Link, browserHistory } from 'react-router'
 
 export default class Navigation extends React.Component {
+  // navigation at the top
   render() {
     return <nav className="navbar navbar-inverse navbar-fixed-top">
       <div className="container">

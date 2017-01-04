@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { getFormData } from './../helpers'
 import { updatePlayerData } from './../actions'
 
+// all available avatars
 const avatars = [
   '/static/avatars/man.png',
   '/static/avatars/woman-13.png',
@@ -49,17 +50,22 @@ class Profile extends React.Component {
   }
 
   _validateAndContinue(buttonPressed) {
+    // get all inputs
     const playerData = getFormData('profileform');
 
+    // validate
     if (!this._validateForm(playerData)) return;
 
+    // tell the server
     this.context.socket.emit('player.create', playerData, (player, error) => {
       if (error) {
         console.log("Error: ", error);
         return;
       }
+      // update locally
       this.props.updatePlayerData(player);
 
+      // continue to create or join a game
       if (buttonPressed === "createGame") {
         browserHistory.push('/game/new');
       } else {
@@ -70,8 +76,10 @@ class Profile extends React.Component {
 
   }
   render() {
+    // wait with display until connection to server is established (done in socket.js)
     if (!this.props.player.id) return <div>Loading...</div>;
 
+    // show lobby/user customisation
     return <div className="col-md-6 col-md-offset-3">
       <h1>Create your profile</h1>
       <br />
@@ -81,7 +89,6 @@ class Profile extends React.Component {
             <label className="col-md-3 control-label" htmlFor="name">Name</label>
             <div className="col-md-8">
               <input id="name" name="name" type="text" placeholder="Hans" className="form-control input-md" defaultValue={this.props.player.name} required="" />
-
             </div>
           </div>
 
@@ -104,7 +111,6 @@ class Profile extends React.Component {
           </div>
         </fieldset>
       </form >
-
     </div >
   }
 }
@@ -122,6 +128,8 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
+
+// tell react that we use the socket from context
 Profile.contextTypes = {
   socket: React.PropTypes.object
 };

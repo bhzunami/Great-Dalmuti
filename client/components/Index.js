@@ -1,10 +1,10 @@
 import { Router, Route, Link, browserHistory } from 'react-router'
 
-
-
 export default class Index extends React.Component {
   constructor(props) {
     super(props);
+
+    // default state
     this.state = {
       games: 0,
       active_players: 0,
@@ -14,18 +14,15 @@ export default class Index extends React.Component {
   }
 
   componentDidMount() {
-    this.context.socket.emit('lobby.info', this.props.params.id, (data) => {
-      this.setState({
-        games: data.games,
-        active_players: data.active_players,
-        inactive_players: data.inactive_players
-      });
+    // on mount, get current lobby data
+    this.context.socket.emit('lobby.info', (data) => {
+      this.setState(data);
     });
   }
 
   render() {
     return <div>
-      <div className="starter-template">
+      <div className="index-page">
         <div><img src="static/logo.png" /></div>
         <p className="lead">Funny card game for up to 8 players.</p>
 
@@ -37,6 +34,8 @@ export default class Index extends React.Component {
     </div>
   }
 }
+
+
 Index.contextTypes = {
   socket: React.PropTypes.object
 };

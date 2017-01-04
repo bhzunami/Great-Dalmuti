@@ -1,3 +1,4 @@
+// reducers for the player state
 export default function (state = {}, action) {
   switch (action.type) {
     case 'PLAYER_UPDATE':

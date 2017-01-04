@@ -1,24 +1,27 @@
 #PlayerHand {
   & {
     display: flex;
-    // flex-wrap: wrap;
     width: 100%;
     padding-top: 50px;
     height: 285px;
-
   }
 
   > * {
     margin-left: -100px;
   }
 
+  // cards
   > * img {
     -webkit-transform: scale(1);
     transform: scale(1);
     -webkit-transition: .3s ease-in-out;
     transition: .3s ease-in-out;
+    
+    width: 150px;
+    display: inline-block;
   }
 
+  // not disabled cards pop out when hovering
   > *:hover:not(.disabled) img {
     -webkit-transform: scale(1.3);
     transform: scale(1.3);
@@ -26,6 +29,7 @@
     margin-top: -100px;
   }
 
+  // selected cards stay popped out
   .selected img {
     -webkit-transform: scale(1.3);
     transform: scale(1.3);
@@ -41,10 +45,4 @@
   > *:first-child {
     margin-left: 0;
   }
-
-  img {
-    width: 150px;
-    display: inline-block;
-  }
-
 }

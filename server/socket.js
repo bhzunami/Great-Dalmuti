@@ -156,7 +156,7 @@ module.exports.init = function (socket_io, lobby) {
     });
 
 
-    socket.on('lobby.info', (data, answer) => {
+    socket.on('lobby.info', (answer) => {
       console.log("GET DATA from lobby");
       const active_players = lobby.players.filter(p => p.active).length;
       answer({
