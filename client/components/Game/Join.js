@@ -6,31 +6,13 @@ import { getFormData } from './../../helpers'
 // shows the join game form
 
 export default class Join extends React.Component {
-  constructor() {
-    super();
-    // initial state
-    this.state = {
-      gameid: null,
-      password: null
-    };
-  }
-
-  handleChange(event) {
-    let key = event.target.id
-
-    if (key == 'gameid') {
-      this.setState({ gameid: event.target.value });
-    } else {
-      this.setState({ password: event.target.value });
-    }
-  }
 
   // submit form
   onSubmit(e) {
     e.preventDefault(); // suppress standard form action, we use web sockets!
 
     // get data
-    const data = getFormData('gameform');
+    const data = getFormData('joinGameForm');
 
     // send to server
     this.context.socket.emit('game.join', data, (_, error) => {
@@ -42,7 +24,7 @@ export default class Join extends React.Component {
       }
 
       // or go to the game
-      browserHistory.push('/game/play/' + this.state.gameid);
+      browserHistory.push('/game/play/' + data.game_id);
 
     });
   }

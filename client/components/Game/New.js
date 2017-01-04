@@ -66,7 +66,7 @@ export default class New extends React.Component {
 
         <div className="form-group">
           <div className="col-md-8 col-md-offset-3">
-            <button type="button" className="btn btn-success">Create Game</button>
+            <button type="submit" className="btn btn-success">Create Game</button>
           </div>
         </div>
       </fieldset>
