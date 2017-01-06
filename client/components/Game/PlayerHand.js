@@ -61,18 +61,19 @@ export default class PlayerHand extends React.Component {
 
   playClick() {
     // called when the player plays his cards (or passes if no card was selected)
+    const {cardsOnHand, onPlayClick, buttonEnabled} = this.props;
 
     if (!buttonEnabled) return;
 
     // pass the cards to the master function in Play.js
-    onPlayClick(selectedCardsIdx.map(idx => cardsOnHand[idx]));
+    onPlayClick(this.state.selectedCardsIdx.map(idx => cardsOnHand[idx]));
 
     // reset selection state
     this.setState({ selectedCardsIdx: [] });
   }
 
   render() {
-    const {cardsOnHand, onPlayClick, buttonEnabled, cardsOnTable} = this.props;
+    const {cardsOnHand, buttonEnabled, cardsOnTable} = this.props;
     const selectedCardsIdx = this.state.selectedCardsIdx;
 
     const hasSelection = selectedCardsIdx.length > 0;
